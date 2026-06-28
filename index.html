@@ -30,7 +30,6 @@
             border-bottom: 2px solid #ff3333; 
             box-shadow: 0 4px 15px rgba(255, 51, 51, 0.3);
             z-index: 999;
-            height: 58px;
         }
 
         header h1 {
@@ -67,6 +66,15 @@
         .video-container {
             position: relative;
             width: 100%;
+            aspect-ratio: 16 / 9; /* সোজা থাকা অবস্থায় রেশিও ঠিক রাখবে */
+            background: #000;
+        }
+
+        /* Video.js এর ভেতরের ডিফল্ট কালো ব্যাকগ্রাউন্ড দূর করা */
+        .video-js {
+            background-color: #000 !important;
+            width: 100% !important;
+            height: 100% !important;
         }
 
         /* সাধারণ মোডে ভিডিওর স্টাইল */
@@ -290,15 +298,15 @@
             margin-top: 20px;
         }
 
-        /* --- নতুন মোবাইল ল্যান্ডস্কেপ ফিক্স (রোটেট করলে ফুল স্ক্রিন ও বর্ডারলেস) --- */
+        /* --- 🛠️ আগের কোডের মতো ১০০% পারফেক্ট ল্যান্ডস্কেপ ফুল স্ক্রিন ফিক্স --- */
         @media (max-width: 950px) and (orientation: landscape) {
             body {
                 overflow: hidden;
-                height: 100vh;
-                width: 100vw;
+                height: 100vh !important;
+                width: 100vw !important;
             }
             header, .playing-now-bar, .category-container, .search-container, .main-content {
-                display: none !important; /* ভিডিও ছাড়া বাকি সব হাইড */
+                display: none !important; 
             }
             .player-section {
                 max-width: 100% !important;
@@ -310,17 +318,19 @@
             .video-container {
                 width: 100vw !important;
                 height: 100vh !important;
+                aspect-ratio: auto !important; /* ল্যান্ডস্কেপে অ্যাসপেক্ট লক রিমুভ */
             }
-            /* Video.js প্লেয়ার কন্টেইনার ফুল স্ক্রিন জোরপূর্বক করা */
-            .video-js {
-                width: 100vw !important;
-                height: 100vh !important;
-                padding-top: 0 !important; /* vjs-16-9 রেসপন্সিভ প্যাডিং রিমুভ */
-            }
+            
+            /* Video.js এর মেইন কন্টেইনার ও তার ভেতরের প্রতিটা এলিমেন্টকে জোরপূর্বক ১০০% ফুল স্ক্রিন করা */
+            .video-js, 
+            .video-js .vjs-tech,
             .video-js video {
                 width: 100vw !important;
                 height: 100vh !important;
-                object-fit: fill !important; /* দুই পাশের কালো দাগ দূর করে স্ক্রিনে ফিট করবে */
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                object-fit: fill !important; /* দুই পাশের কালো বর্ডার পুরোপুরি রিমুভ করবে */
             }
         }
     </style>
@@ -336,7 +346,7 @@
             <span id="playingTitle">এখন দেখছেন: লোড হচ্ছে...</span>
         </div>
         <div class="video-container">
-            <video id="live-player" class="video-js vjs-default-skin vjs-16-9 vjs-big-play-centered" controls preload="auto" playsinline>
+            <video id="live-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" playsinline>
                 <p class="vjs-no-js">আপনার ব্রাউজারটি এই প্লেয়ারটি সাপোর্ট করছে না।</p>
             </video>
         </div>
