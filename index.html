@@ -297,7 +297,7 @@
             margin-top: 20px;
         }
 
-        /* --- 👑 সিএসএস মোড: বাটন ছাড়া ১০০% ফুলস্ক্রিন ফিক্স --- */
+        /* --- ল্যান্ডস্কেপ ফুল স্ক্রিন ফোর্স লক --- */
         @media (max-width: 950px) and (orientation: landscape) {
             html, body {
                 overflow: hidden !important;
@@ -308,12 +308,10 @@
                 position: fixed !important;
             }
             
-            /* ভিডিও ছাড়া বাকি সবকিছু লুকিয়ে ফেলা */
             header, .playing-now-bar, .category-container, .search-container, .main-content {
                 display: none !important; 
             }
             
-            /* প্লেয়ার সেকশন স্ক্রিনের সমান চওড়া করা */
             .player-section {
                 max-width: 100% !important;
                 width: 100vw !important;
@@ -337,7 +335,6 @@
                 margin: 0 !important;
             }
             
-            /* প্লেয়ারের চারপাশের সব ফাঁকা জায়গা এবং বর্ডার দূর করা */
             .video-js,
             .video-js .vjs-tech,
             .video-js video {
@@ -348,12 +345,7 @@
                 left: 0 !important;
                 margin: 0 !important;
                 padding: 0 !important;
-                object-fit: fill !important; /* এটি ১ পিক্সেল কালো দাগও রাখবে না */
-            }
-            
-            /* ফুলস্ক্রিন অবস্থায় কন্ট্রোল বার লুকিয়ে রাখা (প্রয়োজনে টাচ করলে আসবে) */
-            .video-js .vjs-control-bar {
-                z-index: 9999999 !important;
+                object-fit: fill !important; 
             }
         }
     </style>
@@ -596,6 +588,44 @@
             
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        /* 🛠️ আলটিমেট ব্রাউজার সিকিউরিটি বাইপাস রোটেশন স্ক্রিপ্ট */
+        function forceFullscreenMode() {
+            const playerElement = document.getElementById('playerSection');
+            
+            if (window.screen.orientation ? window.screen.orientation.type.includes('landscape') : (window.innerWidth > window.innerHeight)) {
+                // ল্যান্ডস্কেপ মোড সনাক্ত হলে
+                if (player && typeof player.requestFullscreen === 'function') {
+                    player.requestFullscreen();
+                } else if (playerElement.requestFullscreen) {
+                    playerElement.requestFullscreen();
+                } else if (playerElement.webkitRequestFullscreen) {
+                    playerElement.webkitRequestFullscreen(); // Safari/iOS এর জন্য
+                }
+            } else {
+                // ফোন সোজা করলে ফুলস্ক্রিন থেকে বের হয়ে যাবে
+                if (document.exitFullscreen) {
+                    document.exitFullscreen().catch(() => {});
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+            }
+        }
+
+        // আধুনিক এবং ওল্ড দুই ধরণের ওরিয়েন্টেশন লিসেনার যোগ করা হলো
+        if (window.screen && window.screen.orientation) {
+            window.screen.orientation.addEventListener('change', function() {
+                setTimeout(forceFullscreenMode, 150);
+            });
+        } else {
+            window.addEventListener("orientationchange", function() {
+                setTimeout(forceFullscreenMode, 150);
+            });
+        }
+        
+        window.addEventListener("resize", function() {
+            setTimeout(forceFullscreenMode, 100);
+        });
 
         window.onload = fetchPlaylist;
     </script>
