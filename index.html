@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>এস এ লাইভ টিভি</title>
     <link href="https://vjs.zencdn.net/8.3.0/video-js.css" rel="stylesheet" />
+    <!-- 🌍 ওয়ার্ল্ড ক্লাস আইকনের জন্য Font Awesome CDNs যুক্ত করা হলো -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
         * {
             margin: 0;
@@ -22,7 +24,7 @@
             --border-color: #334155;
             --card-bg: linear-gradient(135deg, #111827, #1e293b);
             --card-hover: linear-gradient(135deg, #1e293b, #ff333322);
-            --drawer-bg: rgba(11, 15, 25, 0.88); 
+            --drawer-bg: rgba(11, 15, 25, 0.92); 
             --menu-text-color: #ff4d4d;
             --notice-bg: linear-gradient(90deg, #0f172a, #1e1b4b);
         }
@@ -35,7 +37,7 @@
             --border-color: #cbd5e1;
             --card-bg: linear-gradient(135deg, #ffffff, #f8fafc);
             --card-hover: linear-gradient(135deg, #f1f5f9, #ff333311);
-            --drawer-bg: rgba(255, 255, 255, 0.88);
+            --drawer-bg: rgba(255, 255, 255, 0.92);
             --menu-text-color: #cc0000;
             --notice-bg: linear-gradient(90deg, #f8fafc, #fee2e2);
         }
@@ -108,7 +110,7 @@
             flex-shrink: 0; 
         }
 
-        /* সাইডবার ড্রয়ার */
+        /* 👑 প্রিমিয়াম সাইডবার ড্রয়ার */
         .sidebar-drawer {
             position: fixed;
             top: 0;
@@ -116,21 +118,21 @@
             width: 300px;
             height: 100vh;
             background: var(--drawer-bg);
-            backdrop-filter: blur(20px); 
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: 10px 0 35px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(25px); 
+            -webkit-backdrop-filter: blur(25px);
+            box-shadow: 15px 0 40px rgba(0, 0, 0, 0.7);
             z-index: 10000;
             transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
             display: flex;
             flex-direction: column;
-            border-right: 1px solid rgba(255, 51, 51, 0.3);
+            border-right: 1px solid rgba(255, 51, 51, 0.25);
         }
 
         .sidebar-drawer.open { left: 0; }
 
         .drawer-header {
             padding: 25px 20px;
-            background: linear-gradient(135deg, rgba(18, 18, 20, 0.9), rgba(26, 26, 30, 0.9));
+            background: linear-gradient(135deg, rgba(18, 18, 20, 0.95), rgba(26, 26, 30, 0.95));
             border-bottom: 2px solid #ff3333;
             display: flex;
             justify-content: space-between;
@@ -139,15 +141,17 @@
 
         .drawer-header h2 {
             color: #ff3333;
-            font-size: 18px;
+            font-size: 19px;
             font-weight: 800;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 10px rgba(255, 51, 51, 0.3);
         }
 
         .close-drawer-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: #ffffff;
-            font-size: 16px;
+            font-size: 14px;
             width: 32px;
             height: 32px;
             border-radius: 50%;
@@ -155,50 +159,76 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.3s ease;
+        }
+        .close-drawer-btn:hover {
+            background: #ff3333;
+            color: #fff;
         }
 
         .drawer-menu-items {
-            padding: 20px 15px;
+            padding: 25px 15px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 15px;
             flex: 1;
             overflow-y: auto;
         }
 
+        /* 🎯 ওয়ার্ল্ড ক্লাস মেনু আইটেম ডিজাইন */
         .drawer-item {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 16px;
             padding: 14px 18px;
-            color: var(--menu-text-color); 
+            color: var(--text-color); 
             font-size: 14px;
-            font-weight: 700;
+            font-weight: 600;
             text-decoration: none;
             cursor: pointer;
             border-radius: 12px;
-            background: rgba(255, 51, 51, 0.03); 
-            border: 1px solid rgba(255, 51, 51, 0.1);
-            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.02); 
+            border: 1px solid var(--border-color);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        .drawer-item:hover {
+            background: linear-gradient(90deg, rgba(255, 51, 51, 0.15), transparent);
+            border-color: rgba(255, 51, 51, 0.5);
+            transform: translateX(5px);
+            color: #ff4d4d;
+        }
+
+        /* ⚡ প্রিমিয়াম আইকন বক্স গ্লো স্টাইল */
         .drawer-item .icon-box {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, #ff3333, #bd0000);
-            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 1px solid rgba(255, 51, 51, 0.3);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: #ff3333;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .drawer-item:hover .icon-box {
+            background: linear-gradient(135deg, #ff3333, #bd0000);
             color: #ffffff;
+            border-color: transparent;
+            box-shadow: 0 0 12px rgba(255, 51, 51, 0.6);
+            transform: scale(1.05);
         }
 
         .drawer-overlay {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
-            background: rgba(3, 5, 10, 0.7);
-            backdrop-filter: blur(4px);
+            background: rgba(3, 5, 10, 0.75);
+            backdrop-filter: blur(5px);
             z-index: 9999;
             opacity: 0;
             pointer-events: none;
@@ -281,13 +311,13 @@
             position: relative;
         }
 
-        /* 👑 প্রিমিয়াম ডায়নামিক প্লেয়ার সেকশন */
+        /* প্রিমিয়াম ডায়নামিক প্লেয়ার সেকশন */
         .player-section {
             background: radial-gradient(circle at center, #1e1212 0%, #000000 100%);
             width: 100%;
             position: relative;
             padding: 12px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 51, 51, 0.15); /* সিনেমাটিক অ্যাম্বিয়েন্ট গ্লো */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 51, 51, 0.15); 
             border-bottom: 1px solid rgba(255, 51, 51, 0.3);
             display: none; 
             transition: all 0.4s ease;
@@ -342,14 +372,12 @@
             height: 100% !important;
         }
 
-        /* 📱 সোজা মোডে ভিডিও স্বাভাবিক থাকবে */
         .video-js video,
         .video-js .vjs-tech {
             object-fit: contain !important; 
             transition: transform 0.2s ease, object-fit 0.2s ease;
         }
 
-        /* ম্যানুয়াল ডাবল টাচ জুম ক্লাস */
         .video-js.forced-zoom video,
         .video-js.forced-zoom .vjs-tech {
             object-fit: cover !important; 
@@ -428,7 +456,6 @@
             text-overflow: ellipsis;
         }
 
-        /* ডান পাশের কন্ট্রোল কন্টেইনার */
         .channel-right-action {
             display: flex;
             align-items: center;
@@ -442,7 +469,6 @@
             display: inline-block;
         }
 
-        /* লাইভ ব্যাজ স্টাইল */
         .channel-live-badge {
             background-color: #ff3333;
             color: #ffffff;
@@ -478,14 +504,13 @@
                 flex: 1.5; display: none; border-bottom: none;
                 border-right: 3px solid #ff3333; height: 100%;
                 display: flex; flex-direction: column;
-                padding: 20px; /* ল্যাপটপে চারপাশ থেকে চমৎকার প্যাডিং */
+                padding: 20px; 
             }
             .video-container { width: 100%; flex: 1; aspect-ratio: auto; }
             .main-content { flex: 1; height: 100%; overflow-y: auto; padding: 0 15px 20px 15px; display: flex; flex-direction: column; }
             .channel-list { flex: 1; overflow-y: auto; }
         }
 
-        /* সিএসএস পিউর ল্যান্ডস্কেপ মোড */
         @media (max-width: 950px) and (orientation: landscape) {
             header, .controls-wrapper, .playing-now-bar, .main-content {
                 display: none !important;
@@ -507,7 +532,7 @@
                 z-index: 9999999 !important;
                 display: block !important;
                 aspect-ratio: auto !important;
-                padding: 0 !important; /* ফুলস্ক্রিনে কোনো গ্যাপ থাকবে না */
+                padding: 0 !important; 
                 border-radius: 0 !important;
             }
 
@@ -533,20 +558,27 @@
             <button class="close-drawer-btn" onclick="toggleMenu()">✕</button>
         </div>
         <div class="drawer-menu-items">
+            <!-- 🌓 থিম চেঞ্জার (অরিজিনাল ভেক্টর আইকন) -->
             <div class="drawer-item" onclick="toggleTheme()">
-                <div class="icon-box">🌓</div>
+                <div class="icon-box"><i class="fa-solid fa-moon"></i></div>
                 <span>থিম পরিবর্তন (Light/Dark)</span>
             </div>
+            
+            <!-- 🔄 প্লেলিস্ট রিফ্রেশ (অরিজিনাল ভেক্টর আইকন) -->
             <div class="drawer-item" onclick="refreshPlaylist()">
-                <div class="icon-box">🔄</div>
+                <div class="icon-box"><i class="fa-solid fa-rotate"></i></div>
                 <span>প্লেলিস্ট রিফ্রেশ করুন</span>
             </div>
+            
+            <!-- ⚠️ রিপোর্ট (অরিজিনাল ভেক্টর আইকন) -->
             <div class="drawer-item" onclick="alert('রিপোর্ট করার জন্য ধন্যবাদ! আমরা লিংকটি পরীক্ষা করব।')">
-                <div class="icon-box">⚠️</div>
+                <div class="icon-box"><i class="fa-solid fa-triangle-exclamation"></i></div>
                 <span>চ্যানেল অচল? রিপোর্ট করুন</span>
             </div>
+            
+            <!-- 💬 ফেসবুক সাপোর্ট (অরিজিনাল অফিশিয়াল ব্র্যান্ডেড আইকন) -->
             <a href="https://www.facebook.com/ahmed.bd.fb" target="_blank" class="drawer-item">
-                <div class="icon-box">💬</div>
+                <div class="icon-box"><i class="fa-brands fa-facebook-messenger"></i></div>
                 <span>ফেসবুক পেজ (সাপোর্ট)</span>
             </a>
         </div>
