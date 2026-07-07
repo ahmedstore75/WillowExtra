@@ -31,7 +31,7 @@
             --bg-color: #f1f5f9;
             --panel-bg: #ffffff;
             --text-color: #1e293b;
-            --input-bg: #e2e8f0;
+            --input-bg: #cbd5e1;
             --border-color: #cbd5e1;
             --card-bg: linear-gradient(135deg, #ffffff, #f8fafc);
             --card-hover: linear-gradient(135deg, #f1f5f9, #ff333311);
@@ -333,26 +333,18 @@
             height: 100% !important;
         }
 
-        /* 📱 ডিফল্ট ও জুম সিএসএস লজিক */
+        /* 📱 ফোন সোজা থাকলে প্লেয়ার স্বাভাবিক থাকবে (Contain) */
         .video-js video,
         .video-js .vjs-tech {
             object-fit: contain !important; 
             transition: transform 0.2s ease, object-fit 0.2s ease;
         }
 
-        /* 🔍 জুম করার জন্য নতুন ক্লাস */
+        /* 🔍 ম্যানুয়াল ডাবল টাচ করলে কভার ফিল হবে */
         .video-js.forced-zoom video,
         .video-js.forced-zoom .vjs-tech {
             object-fit: cover !important; 
-            transform: scale(1.02); /* ফুলস্ক্রিন ফিল করতে সামান্য স্কেল */
-        }
-
-        /* ল্যান্ডস্কেপ ও ফুলস্ক্রিন মোড */
-        body.landscape-mode .video-js video,
-        body.landscape-mode .vjs-tech,
-        .video-js.vjs-fullscreen video,
-        .video-js.vjs-fullscreen .vjs-tech {
-            object-fit: fill !important; 
+            transform: scale(1.02);
         }
 
         .vjs-custom-rotate-button {
@@ -457,6 +449,7 @@
             .channel-list { flex: 1; overflow-y: auto; }
         }
 
+        /* 🔄 শুধুমাত্র ল্যান্ডস্কেপ (স্ক্রিন ঘুরালে) ফুল স্ক্রিন এবং ফিট হবে */
         body.landscape-mode header,
         body.landscape-mode .controls-wrapper,
         body.landscape-mode .playing-now-bar,
@@ -483,6 +476,12 @@
         body.landscape-mode .video-js {
             width: 100vw !important;
             height: 100vh !important;
+        }
+
+        /* ল্যান্ডস্কেপ মোডে ভিডিও স্ক্রিন ফিট অবজেক্ট */
+        body.landscape-mode .video-js video,
+        body.landscape-mode .vjs-tech {
+            object-fit: fill !important; /* স্ক্রিনের সাথে পুরোপুরি ফিট হয়ে যাবে */
         }
     </style>
 </head>
@@ -531,7 +530,6 @@
                 <span class="notice-live-dot"></span>
                 <span>এখন দেখছেন: <span id="playingTitle" style="color: #ff3333;">কোনো চ্যানেল সিলেক্ট করা নেই</span></span>
             </div>
-            <!-- ডাবল টাচ লিজেনিং এরিয়া -->
             <div class="video-container" id="videoContainer">
                 <video id="live-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" playsinline>
                     <p class="vjs-no-js">আপনার ব্রাউজারটি এই প্লেয়ারটি সাপোর্ট করছে না।</p>
@@ -542,13 +540,11 @@
         <!-- মেইন কনটেন্ট -->
         <div class="main-content">
             <div class="controls-wrapper" id="controlsWrapper" style="padding-top: 15px; padding-bottom: 15px;">
-                <!-- ক্যাটাগরি অপশন (বাম দিকে) -->
                 <div class="category-select-wrapper">
                     <select class="category-dropdown" id="categoryDropdown" onchange="filterCategory(this.value)">
                         <option value="All">All Categories</option>
                     </select>
                 </div>
-                <!-- সার্চিং অপশন (ডান দিকে - প্লেসহোল্ডার আপডেট করা হয়েছে) -->
                 <div class="search-container">
                     <input type="text" class="search-input" id="searchBox" placeholder="চ্যানেল সার্চিং..." oninput="searchChannel()">
                 </div>
@@ -734,7 +730,7 @@
                 player = videojs('live-player');
                 addCustomRotateButton(); 
                 setupOrientationTrigger();
-                setupForcedDoubleTapZoom(); // 🔍 নতুন ডাবল টাচ ট্র্যাকার রান করা হলো
+                setupForcedDoubleTapZoom(); 
             }
             player.src({ src: url, type: 'application/x-mpegURL' });
             player.play();
@@ -742,24 +738,22 @@
             if(window.innerWidth <= 950) window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        /* 🔍 একদম নিখুঁত ডাবল টাচ/ক্লিক জুম লজিক */
+        /* ডাবল টাচ জুম ট্র্যাকার */
         function setupForcedDoubleTapZoom() {
             const container = document.getElementById('videoContainer');
             let lastTapTime = 0;
 
-            // মোবাইলের জন্য টাচ ইভেন্ট লিসেনার
             container.addEventListener('touchstart', function(e) {
                 const now = new Date().getTime();
                 const timespan = now - lastTapTime;
                 
                 if (timespan < 300 && timespan > 0) {
-                    e.preventDefault(); // ব্রাউজারের নিজস্ব জুম বন্ধ করবে
+                    e.preventDefault(); 
                     toggleZoomState();
                 }
                 lastTapTime = now;
             }, { passive: false });
 
-            // পিসি বা মাউস ইউজারদের জন্য ডাবল ক্লিক লিসেনার
             container.addEventListener('dblclick', function(e) {
                 e.preventDefault();
                 toggleZoomState();
@@ -791,7 +785,7 @@
                 handleClick: function() {
                     if(window.innerWidth > 950) return;
                     
-                    const container = document.getElementById('videoContainer');
+                    const container = document.getElementById('playerSection');
                     if (!document.body.classList.contains('landscape-mode')) {
                         if (container.requestFullscreen) container.requestFullscreen();
                         else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
@@ -806,14 +800,14 @@
             player.getChild('controlBar').addChild('RotateButton', {}, player.getChild('controlBar').children_.length - 1);
         }
 
-        /* ওরিয়েন্টেশন ট্র্যাকিং */
+        /* 🔄 ওরিয়েন্টেশন ট্র্যাকিং - শুধুমাত্র স্ক্রিন ঘুরালে স্কিন ফিট হবে */
         function setupOrientationTrigger() {
             const orientationMatcher = window.matchMedia("(orientation: landscape)");
             
             function handleOrientationChange(m) {
                 if(window.innerWidth > 950) return; 
                 
-                const container = document.getElementById('videoContainer');
+                const container = document.getElementById('playerSection');
                 if (m.matches) {
                     document.body.classList.add('landscape-mode');
                     setTimeout(() => {
