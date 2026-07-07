@@ -24,7 +24,7 @@
             --card-hover: linear-gradient(135deg, #1e293b, #ff333322);
             --drawer-bg: rgba(11, 15, 25, 0.88); 
             --menu-text-color: #ff4d4d;
-            --notice-bg: linear-gradient(90deg, #1e1b4b, #311010);
+            --notice-bg: linear-gradient(90deg, #0f172a, #1e1b4b);
         }
 
         [data-theme="light"] {
@@ -37,7 +37,7 @@
             --card-hover: linear-gradient(135deg, #f1f5f9, #ff333311);
             --drawer-bg: rgba(255, 255, 255, 0.88);
             --menu-text-color: #cc0000;
-            --notice-bg: linear-gradient(90deg, #e2e8f0, #fee2e2);
+            --notice-bg: linear-gradient(90deg, #f8fafc, #fee2e2);
         }
 
         body {
@@ -281,29 +281,34 @@
             position: relative;
         }
 
-        /* প্লেয়ার সেকশন */
+        /* 👑 প্রিমিয়াম ডায়নামিক প্লেয়ার সেকশন */
         .player-section {
-            background-color: #000;
+            background: radial-gradient(circle at center, #1e1212 0%, #000000 100%);
             width: 100%;
             position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-            border-bottom: 2px solid var(--border-color);
+            padding: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 51, 51, 0.15); /* সিনেমাটিক অ্যাম্বিয়েন্ট গ্লো */
+            border-bottom: 1px solid rgba(255, 51, 51, 0.3);
             display: none; 
+            transition: all 0.4s ease;
         }
 
         .playing-now-bar {
             background: var(--notice-bg);
-            padding: 10px 15px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 12px 15px;
             font-size: 14px;
             color: var(--text-color);
-            font-weight: bold;
-            border-bottom: 2px solid #ff3333aa;
+            font-weight: 700;
+            border-radius: 12px 12px 0 0;
+            border-bottom: 2px solid transparent;
+            border-image: linear-gradient(90deg, transparent, #ff3333, transparent) 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
             letter-spacing: 0.5px;
-            box-shadow: inset 0 -5px 15px rgba(0,0,0,0.2);
         }
 
         .notice-live-dot {
@@ -312,6 +317,7 @@
             background-color: #ff3333;
             border-radius: 50%;
             display: inline-block;
+            box-shadow: 0 0 10px #ff3333;
             animation: blinker 1.5s linear infinite;
         }
 
@@ -325,6 +331,9 @@
             aspect-ratio: 16 / 9; 
             background: #000;
             overflow: hidden;
+            border-radius: 0 0 12px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
         }
 
         .video-js {
@@ -469,6 +478,7 @@
                 flex: 1.5; display: none; border-bottom: none;
                 border-right: 3px solid #ff3333; height: 100%;
                 display: flex; flex-direction: column;
+                padding: 20px; /* ল্যাপটপে চারপাশ থেকে চমৎকার প্যাডিং */
             }
             .video-container { width: 100%; flex: 1; aspect-ratio: auto; }
             .main-content { flex: 1; height: 100%; overflow-y: auto; padding: 0 15px 20px 15px; display: flex; flex-direction: column; }
@@ -497,6 +507,8 @@
                 z-index: 9999999 !important;
                 display: block !important;
                 aspect-ratio: auto !important;
+                padding: 0 !important; /* ফুলস্ক্রিনে কোনো গ্যাপ থাকবে না */
+                border-radius: 0 !important;
             }
 
             .video-js {
@@ -533,7 +545,6 @@
                 <div class="icon-box">⚠️</div>
                 <span>চ্যানেল অচল? রিপোর্ট করুন</span>
             </div>
-            <!-- 🎯 আপডেট করা ফেসবুক পেজ লিংক -->
             <a href="https://www.facebook.com/ahmed.bd.fb" target="_blank" class="drawer-item">
                 <div class="icon-box">💬</div>
                 <span>ফেসবুক পেজ (সাপোর্ট)</span>
@@ -555,7 +566,7 @@
         <div class="player-section" id="playerSection">
             <div class="playing-now-bar">
                 <span class="notice-live-dot"></span>
-                <span>এখন দেখছেন: <span id="playingTitle" style="color: #ff3333;">কোনো চ্যানেল সিলেক্ট করা নেই</span></span>
+                <span>এখন দেখছেন: <span id="playingTitle" style="color: #ff4d4d; text-shadow: 0 0 8px rgba(255,51,51,0.4);">কোনো চ্যানেল সিলেক্ট করা নেই</span></span>
             </div>
             <div class="video-container" id="videoContainer">
                 <video id="live-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" playsinline>
