@@ -24,6 +24,7 @@
             --card-hover: linear-gradient(135deg, #1e293b, #ff333322);
             --drawer-bg: rgba(11, 15, 25, 0.88); 
             --menu-text-color: #ff4d4d;
+            --notice-bg: linear-gradient(90deg, #1e1b4b, #311010);
         }
 
         [data-theme="light"] {
@@ -36,6 +37,7 @@
             --card-hover: linear-gradient(135deg, #f1f5f9, #ff333311);
             --drawer-bg: rgba(255, 255, 255, 0.88);
             --menu-text-color: #cc0000;
+            --notice-bg: linear-gradient(90deg, #e2e8f0, #fee2e2);
         }
 
         body {
@@ -287,14 +289,34 @@
             display: none; 
         }
 
+        /* 📢 নতুন নোটিশ বার ডিজাইন */
         .playing-now-bar {
-            background: linear-gradient(90deg, #0f172a, #1e293b);
-            padding: 12px 15px;
+            background: var(--notice-bg);
+            padding: 10px 15px;
             font-size: 14px;
-            color: #ffffff;
+            color: var(--text-color);
             font-weight: bold;
-            border-bottom: 1px solid #ff333344;
-            text-align: center;
+            border-bottom: 2px solid #ff3333aa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            letter-spacing: 0.5px;
+            box-shadow: inset 0 -5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* বারের লাইভ ব্লিংক ডট */
+        .notice-live-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #ff3333;
+            border-radius: 50%;
+            display: inline-block;
+            animation: blinker 1.5s linear infinite;
+        }
+
+        @keyframes blinker {
+            50% { opacity: 0; }
         }
 
         .video-container {
@@ -317,7 +339,7 @@
             object-fit: contain !important; 
         }
 
-        /* 🔄 শুধুমাত্র বাস্তবেই ল্যান্ডস্কেপ বা ঘোরানো হলে ভিডিও ১০০% স্ট্রেচ হয়ে ফুল ফিট হবে */
+        /* 🔄 শুধুমাত্র বাস্তবে ল্যান্ডস্কেপ বা ঘোরানো হলে ভিডিও ১০০% স্ট্রেচ হয়ে ফুল ফিট হবে */
         body.landscape-mode .video-js video,
         body.landscape-mode .vjs-tech,
         .video-js.vjs-fullscreen video,
@@ -500,8 +522,10 @@
     <div class="app-layout">
         <!-- প্লেয়ার সেকশন -->
         <div class="player-section" id="playerSection">
+            <!-- 📢 আপডেট করা নোটিশ বার শিরোনাম -->
             <div class="playing-now-bar">
-                এখন দেখছেন: <span id="playingTitle">কোনো চ্যানেল সিলেক্ট করা নেই</span>
+                <span class="notice-live-dot"></span>
+                <span>এখন দেখছেন: <span id="playingTitle" style="color: #ff3333;">কোনো চ্যানেল সিলেক্ট করা নেই</span></span>
             </div>
             <div class="video-container" id="videoContainer">
                 <video id="live-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" playsinline>
@@ -711,7 +735,7 @@
             if(window.innerWidth <= 950) window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        /* 🔄 কাস্টম রোটেশন বাটন লজিক ফিক্স */
+        /* 🔄 কাস্টম রোটেশন বাটন লজিক */
         function addCustomRotateButton() {
             const Button = videojs.getComponent('Button');
             const RotateButton = videojs.extend(Button, {
@@ -729,8 +753,6 @@
                 handleClick: function() {
                     if(window.innerWidth > 950) return;
                     
-                    // ⚠️ স্ক্রিন সোজা থাকলে জোর করে ফুল স্ক্রিন করা বন্ধ। 
-                    // এটি ইউজারকে রিমাইন্ডার দিবে বা ফুলস্ক্রিন রিকোয়েস্ট তৈরি করবে কিন্তু অরিয়েন্টেশন চেঞ্জ না হওয়া পর্যন্ত ফুল স্ট্রেচ করবে না।
                     const container = document.getElementById('videoContainer');
                     if (!document.body.classList.contains('landscape-mode')) {
                         if (container.requestFullscreen) container.requestFullscreen();
@@ -746,7 +768,7 @@
             player.getChild('controlBar').addChild('RotateButton', {}, player.getChild('controlBar').children_.length - 1);
         }
 
-        /* ওরিয়েন্টেশন ট্র্যাকিং (প্রকৃত চেঞ্জ হ্যান্ডলার) */
+        /* ওরিয়েন্টেশন ট্র্যাকিং */
         function setupOrientationTrigger() {
             const orientationMatcher = window.matchMedia("(orientation: landscape)");
             
@@ -755,7 +777,6 @@
                 
                 const container = document.getElementById('videoContainer');
                 if (m.matches) {
-                    // 📱 শুধুমাত্র বাস্তবে ফোন ল্যান্ডস্কেপ মোডে ঘুরলেই ফুল স্ক্রিন মোড ট্রিগার হবে
                     document.body.classList.add('landscape-mode');
                     setTimeout(() => {
                         if (container.requestFullscreen) container.requestFullscreen();
@@ -774,11 +795,9 @@
                 orientationMatcher.addListener(handleOrientationChange); 
             }
 
-            // ফুলস্ক্রিন থেকে ব্যাক করলে ক্লাস রিমুভ করার সেফটি চেক
             const exitEvents = ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'];
             exitEvents.forEach(evt => {
                 document.addEventListener(evt, () => {
-                    // ফুলস্ক্রিন এক্সিট হয়ে গেলে এবং স্ক্রিন যদি সোজা (Portrait) থাকে তবে ল্যান্ডস্কেপ মোড রিমুভ
                     if (!document.fullscreenElement && !document.webkitFullscreenElement) {
                         if (window.innerHeight > window.innerWidth) {
                             document.body.classList.remove('landscape-mode');
