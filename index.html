@@ -386,7 +386,7 @@
             align-items: center;
             gap: 15px;
             overflow: hidden;
-            width: 75%; /* ডান পাশের ব্যাজের জন্য জায়গা রাখা হলো */
+            width: 75%; 
         }
 
         .logo-wrapper {
@@ -419,7 +419,7 @@
             text-overflow: ellipsis;
         }
 
-        /* 🎯 ডান পাশের কন্ট্রোল কন্টেইনার (প্লে আইকন ও লাইভ ব্যাজ) */
+        /* ডান পাশের কন্ট্রোল কন্টেইনার */
         .channel-right-action {
             display: flex;
             align-items: center;
@@ -433,7 +433,7 @@
             display: inline-block;
         }
 
-        /* 🔴 নতুন লাইভ ব্যাজ স্টাইল - যা একদম ডান পাশে থাকবে */
+        /* লাইভ ব্যাজ স্টাইল */
         .channel-live-badge {
             background-color: #ff3333;
             color: #ffffff;
@@ -441,7 +441,7 @@
             padding: 3px 8px;
             border-radius: 4px;
             font-weight: 900;
-            display: none; /* ডিফল্ট অবস্থায় লুকানো থাকবে */
+            display: none; 
             letter-spacing: 0.5px;
             box-shadow: 0 0 8px rgba(255, 51, 51, 0.6);
             animation: pulse-live 1.5s infinite alternate;
@@ -452,7 +452,6 @@
             to { transform: scale(1.05); opacity: 1; }
         }
 
-        /* ⚡ চ্যানেল একটিভ বা প্লে হলে ডান পাশের প্লে আইকন লুকিয়ে লাইভ লেখা দেখাবে */
         .active-channel .play-icon {
             display: none !important;
         }
@@ -476,7 +475,7 @@
             .channel-list { flex: 1; overflow-y: auto; }
         }
 
-        /* 🔄 সিএসএস পিউর ল্যান্ডস্কেপ মোড (মোবাইল ঘোরানো হলেই এই স্টাইল রান হবে) */
+        /* সিএসএস পিউর ল্যান্ডস্কেপ মোড */
         @media (max-width: 950px) and (orientation: landscape) {
             header, .controls-wrapper, .playing-now-bar, .main-content {
                 display: none !important;
@@ -505,7 +504,6 @@
                 height: 100vh !important;
             }
 
-            /* 🎯 এটিই স্ক্রিনকে ১০০% ফিট ও কভার করবে */
             .video-js video,
             .video-js .vjs-tech {
                 object-fit: fill !important; 
@@ -535,7 +533,8 @@
                 <div class="icon-box">⚠️</div>
                 <span>চ্যানেল অচল? রিপোর্ট করুন</span>
             </div>
-            <a href="https://facebook.com" target="_blank" class="drawer-item">
+            <!-- 🎯 আপডেট করা ফেসবুক পেজ লিংক -->
+            <a href="https://www.facebook.com/ahmed.bd.fb" target="_blank" class="drawer-item">
                 <div class="icon-box">💬</div>
                 <span>ফেসবুক পেজ (সাপোর্ট)</span>
             </a>
@@ -768,7 +767,6 @@
             if(window.innerWidth <= 950) window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        /* ডাবল টাচ জুম ট্র্যাকার */
         function setupForcedDoubleTapZoom() {
             const container = document.getElementById('videoContainer');
             let lastTapTime = 0;
@@ -797,7 +795,6 @@
             }
         }
 
-        /* কাস্টম রোটেশন বাটন */
         function addCustomRotateButton() {
             const Button = videojs.getComponent('Button');
             const RotateButton = videojs.extend(Button, {
@@ -830,7 +827,6 @@
             player.getChild('controlBar').addChild('RotateButton', {}, player.getChild('controlBar').children_.length - 1);
         }
 
-        /* ওরিয়েন্টেশন ট্র্যাকিং */
         function setupOrientationTrigger() {
             window.addEventListener("resize", checkOrientation);
             window.addEventListener("orientationchange", checkOrientation);
