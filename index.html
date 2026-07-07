@@ -3,300 +3,377 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>এস এ লাইভ টিভি</title>
+    <title>এস এ লাইভ টিভি | প্রফেশনাল স্ট্রিমিং</title>
+    
+    <!-- 🌍 প্রিমিয়াম কোর লাইব্রেরী ও গ্লোবাল ফন্ট -->
     <link href="https://vjs.zencdn.net/8.3.0/video-js.css" rel="stylesheet" />
-    <!-- 🌍 ওয়ার্ল্ড ক্লাস আইকনের জন্য Font Awesome CDNs যুক্ত করা হলো -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
+        /* 🎨 গ্লোবাল রিসেট এবং লাক্সারি থিম ইঞ্জিন */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Hind Siliguri', sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* থিম ভেরিয়েবল */
         :root {
-            --bg-color: #060913;
-            --panel-bg: #0b0f19;
-            --text-color: #e2e8f0;
-            --input-bg: #1e293b;
-            --border-color: #334155;
-            --card-bg: linear-gradient(135deg, #111827, #1e293b);
-            --card-hover: linear-gradient(135deg, #1e293b, #ff333322);
-            --drawer-bg: rgba(11, 15, 25, 0.92); 
-            --menu-text-color: #ff4d4d;
-            --notice-bg: linear-gradient(90deg, #0f172a, #1e1b4b);
+            --brand-color: #ef4444;
+            --brand-hover: #dc2626;
+            --brand-glow: rgba(239, 68, 68, 0.25);
+            --bg-color: #030712;
+            --panel-bg: rgba(17, 24, 39, 0.7);
+            --text-color: #f3f4f6;
+            --text-muted: #9ca3af;
+            --input-bg: #1f2937;
+            --border-color: rgba(255, 255, 255, 0.06);
+            --card-bg: rgba(31, 41, 55, 0.4);
+            --card-hover: rgba(239, 68, 68, 0.06);
+            --drawer-bg: rgba(3, 7, 18, 0.94);
+            --glass-blur: blur(20px);
         }
 
         [data-theme="light"] {
-            --bg-color: #f1f5f9;
-            --panel-bg: #ffffff;
-            --text-color: #1e293b;
-            --input-bg: #cbd5e1;
-            --border-color: #cbd5e1;
-            --card-bg: linear-gradient(135deg, #ffffff, #f8fafc);
-            --card-hover: linear-gradient(135deg, #f1f5f9, #ff333311);
-            --drawer-bg: rgba(255, 255, 255, 0.92);
-            --menu-text-color: #cc0000;
-            --notice-bg: linear-gradient(90deg, #f8fafc, #fee2e2);
+            --bg-color: #f8fafc;
+            --panel-bg: rgba(255, 255, 255, 0.8);
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --input-bg: #e2e8f0;
+            --border-color: rgba(0, 0, 0, 0.06);
+            --card-bg: rgba(255, 255, 255, 0.6);
+            --card-hover: rgba(239, 68, 68, 0.04);
+            --drawer-bg: rgba(255, 255, 255, 0.96);
         }
 
         body {
-            background-color: var(--bg-color); 
+            background-color: var(--bg-color);
             color: var(--text-color);
             display: flex;
             flex-direction: column;
             height: 100vh;
             overflow: hidden;
-            transition: background 0.3s, color 0.3s;
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        /* হেডার */
+        /* 👑 ওয়ান-লাইন প্রিমিয়াম হেডার */
         header {
-            background: linear-gradient(90deg, #121214, #1a1a1e);
-            padding: 14px 15px;
-            border-bottom: 2px solid #ff3333; 
-            box-shadow: 0 4px 15px rgba(255, 51, 51, 0.3);
+            background: var(--panel-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            padding: 14px 24px;
+            border-bottom: 1px solid var(--border-color);
             z-index: 999;
-            position: relative; 
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 15px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
         }
 
         .header-left {
             display: flex;
             align-items: center;
-            gap: 20px; 
-            flex: 1;
-            overflow: hidden;
+            gap: 16px;
         }
 
         .menu-btn {
-            background: none;
-            border: none;
-            color: #ff3333 !important;
-            font-size: 26px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            font-size: 18px;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            flex-shrink: 0;
             display: flex;
             align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .menu-btn:hover {
+            background: var(--brand-color);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 0 15px var(--brand-glow);
         }
 
         header h1 {
-            color: #ff3333; 
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
-            letter-spacing: 1px;
-            text-shadow: 0 0 10px rgba(255, 51, 51, 0.4);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #fff 0%, #9ca3af 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        [data-theme="light"] header h1 {
+            background: linear-gradient(135deg, #0f172a 0%, #475569 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .channel-count-badge {
-            background: none; 
-            color: #ff3333; 
-            font-size: 13px;
-            font-weight: bold;
-            padding: 4px 12px; 
-            border: 2px solid #ff3333; 
-            border-radius: 20px; 
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--brand-color);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 99px;
             letter-spacing: 0.5px;
-            box-shadow: 0 0 8px rgba(255, 51, 51, 0.4); 
-            flex-shrink: 0; 
         }
 
-        /* 👑 প্রিমিয়াম সাইডবার ড্রয়ার */
+        /* 💎 সাইডবার ড্রয়ার (Netflix স্টাইল) */
         .sidebar-drawer {
             position: fixed;
             top: 0;
-            left: -300px;
-            width: 300px;
+            left: -320px;
+            width: 320px;
             height: 100vh;
             background: var(--drawer-bg);
-            backdrop-filter: blur(25px); 
-            -webkit-backdrop-filter: blur(25px);
-            box-shadow: 15px 0 40px rgba(0, 0, 0, 0.7);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
             z-index: 10000;
-            transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
+            transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
             display: flex;
             flex-direction: column;
-            border-right: 1px solid rgba(255, 51, 51, 0.25);
+            border-right: 1px solid var(--border-color);
         }
-
         .sidebar-drawer.open { left: 0; }
 
         .drawer-header {
-            padding: 25px 20px;
-            background: linear-gradient(135deg, rgba(18, 18, 20, 0.95), rgba(26, 26, 30, 0.95));
-            border-bottom: 2px solid #ff3333;
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
         .drawer-header h2 {
-            color: #ff3333;
-            font-size: 19px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            text-shadow: 0 0 10px rgba(255, 51, 51, 0.3);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-color);
         }
 
         .close-drawer-btn {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
             font-size: 14px;
-            width: 32px;
-            height: 32px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
         }
         .close-drawer-btn:hover {
-            background: #ff3333;
-            color: #fff;
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--brand-color);
         }
 
         .drawer-menu-items {
-            padding: 25px 15px;
+            padding: 24px 16px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 8px;
             flex: 1;
             overflow-y: auto;
         }
 
-        /* 🎯 ওয়ার্ল্ড ক্লাস মেনু আইটেম ডিজাইন */
         .drawer-item {
             display: flex;
             align-items: center;
             gap: 16px;
-            padding: 14px 18px;
-            color: var(--text-color); 
+            padding: 14px 16px;
+            color: var(--text-color);
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 500;
             text-decoration: none;
             cursor: pointer;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.02); 
-            border: 1px solid var(--border-color);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 10px;
+            border: 1px solid transparent;
+            transition: all 0.25s ease;
         }
-
         .drawer-item:hover {
-            background: linear-gradient(90deg, rgba(255, 51, 51, 0.15), transparent);
-            border-color: rgba(255, 51, 51, 0.5);
-            transform: translateX(5px);
-            color: #ff4d4d;
+            background: var(--card-bg);
+            border-color: var(--border-color);
+            transform: translateX(4px);
         }
 
-        /* ⚡ প্রিমিয়াম আইকন বক্স গ্লো স্টাইল */
         .drawer-item .icon-box {
             width: 36px;
             height: 36px;
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-            border: 1px solid rgba(255, 51, 51, 0.3);
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #ff3333;
+            color: var(--text-muted);
             font-size: 15px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: all 0.25s ease;
         }
-
         .drawer-item:hover .icon-box {
-            background: linear-gradient(135deg, #ff3333, #bd0000);
-            color: #ffffff;
-            border-color: transparent;
-            box-shadow: 0 0 12px rgba(255, 51, 51, 0.6);
-            transform: scale(1.05);
+            color: var(--brand-color);
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.2);
         }
 
         .drawer-overlay {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
-            background: rgba(3, 5, 10, 0.75);
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
             z-index: 9999;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.3s ease;
         }
-
         .drawer-overlay.show { opacity: 1; pointer-events: auto; }
 
-        /* কন্ট্রোল এরিয়া */
+        /* 🔍 কন্ট্রোল জোন (সার্চ ও ফিল্টার) */
         .controls-wrapper {
-            background-color: var(--panel-bg);
-            border-bottom: 1px solid var(--border-color);
-            padding: 10px 15px;
-            display: none; 
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px;
+            display: none;
             align-items: center;
-            gap: 10px;
-            position: sticky;
-            top: 0;
-            z-index: 10;
+            gap: 12px;
+            margin-top: 16px;
         }
 
         .category-select-wrapper {
             position: relative;
-            flex: 1; 
+            flex: 1;
         }
-
         .category-dropdown {
             width: 100%;
-            padding: 10px 30px 10px 12px;
+            padding: 11px 16px;
             background-color: var(--input-bg);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             color: var(--text-color);
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 13px;
+            font-weight: 500;
             outline: none;
             cursor: pointer;
-            appearance: none; 
+            appearance: none;
             -webkit-appearance: none;
         }
-
         .category-select-wrapper::after {
-            content: "▼";
-            font-size: 10px;
-            color: #ff3333;
+            content: "\f0d7";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            font-size: 12px;
+            color: var(--text-muted);
             position: absolute;
-            right: 12px;
-            top: 50%;
+            right: 16px; top: 50%;
             transform: translateY(-50%);
             pointer-events: none;
         }
 
-        .search-container { 
-            min-width: 140px;
-            max-width: 170px;
+        .search-container {
+            flex: 1.2;
+            position: relative;
         }
-
         .search-input {
             width: 100%;
-            padding: 10px 15px;
+            padding: 11px 16px 11px 40px;
             background-color: var(--input-bg);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             color: var(--text-color);
-            font-size: 14px;
+            font-size: 13px;
             outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-input:focus {
+            border-color: rgba(239, 68, 68, 0.5);
+        }
+        .search-container::before {
+            content: "\f002";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 16px; top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 13px;
         }
 
+        /* 🎬 আল্ট্রা-মডার্ন সিনেমাটিক প্লেয়ার এরিয়া */
+        .player-section {
+            background: #000;
+            width: 100%;
+            position: relative;
+            padding: 0;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            border-bottom: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .playing-now-bar {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 14px 20px;
+            font-size: 13px;
+            color: var(--text-color);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .notice-live-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--brand-color);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--brand-color);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #000;
+            overflow: hidden;
+        }
+
+        .video-js {
+            background-color: #000 !important;
+            width: 100% !important;
+            height: 100% !important;
+        }
+        .video-js video { object-fit: contain !important; }
+        .video-js.forced-zoom video { object-fit: cover !important; transform: scale(1.02); }
+
+        .vjs-custom-rotate-button {
+            cursor: pointer;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+        }
+
+        /* 📺 প্রিমিয়াম চ্যানেল গ্রিড ও লিস্ট */
         .app-layout {
             display: flex;
             flex-direction: column;
@@ -307,150 +384,76 @@
         .main-content {
             flex: 1;
             overflow-y: auto;
-            padding: 0 15px 15px 15px; 
-            position: relative;
-        }
-
-        /* প্রিমিয়াম ডায়নামিক প্লেয়ার সেকশন */
-        .player-section {
-            background: radial-gradient(circle at center, #1e1212 0%, #000000 100%);
-            width: 100%;
-            position: relative;
-            padding: 12px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 51, 51, 0.15); 
-            border-bottom: 1px solid rgba(255, 51, 51, 0.3);
-            display: none; 
-            transition: all 0.4s ease;
-        }
-
-        .playing-now-bar {
-            background: var(--notice-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 12px 15px;
-            font-size: 14px;
-            color: var(--text-color);
-            font-weight: 700;
-            border-radius: 12px 12px 0 0;
-            border-bottom: 2px solid transparent;
-            border-image: linear-gradient(90deg, transparent, #ff3333, transparent) 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            letter-spacing: 0.5px;
-        }
-
-        .notice-live-dot {
-            width: 10px;
-            height: 10px;
-            background-color: #ff3333;
-            border-radius: 50%;
-            display: inline-block;
-            box-shadow: 0 0 10px #ff3333;
-            animation: blinker 1.5s linear infinite;
-        }
-
-        @keyframes blinker {
-            50% { opacity: 0; }
-        }
-
-        .video-container {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 16 / 9; 
-            background: #000;
-            overflow: hidden;
-            border-radius: 0 0 12px 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
-        }
-
-        .video-js {
-            background-color: #000 !important;
-            width: 100% !important;
-            height: 100% !important;
-        }
-
-        .video-js video,
-        .video-js .vjs-tech {
-            object-fit: contain !important; 
-            transition: transform 0.2s ease, object-fit 0.2s ease;
-        }
-
-        .video-js.forced-zoom video,
-        .video-js.forced-zoom .vjs-tech {
-            object-fit: cover !important; 
-            transform: scale(1.02);
-        }
-
-        .vjs-custom-rotate-button {
-            cursor: pointer;
-            font-size: 1.6em;
-            line-height: 2;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
+            padding: 0 20px 20px 20px;
         }
 
         .channel-list {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-top: 15px; 
+            margin-top: 16px;
         }
 
         .channel-row {
-            background: var(--card-bg); 
-            border-radius: 8px;
-            padding: 14px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             cursor: pointer;
-            border: 1px solid var(--border-color);
-            border-left: 5px solid #ff3333; 
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .channel-row:hover {
+            background: var(--card-hover);
+            border-color: rgba(239, 68, 68, 0.2);
+            transform: translateY(-2px);
         }
 
         .channel-row.active-channel {
-            background: linear-gradient(135deg, #1e293b, #ff333333);
-            border-left-color: #ff3333;
+            background: rgba(239, 68, 68, 0.08);
+            border-color: rgba(239, 68, 68, 0.4);
+            box-shadow: inset 0 0 12px rgba(239, 68, 68, 0.05);
         }
 
         .channel-left {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 16px;
             overflow: hidden;
-            width: 75%; 
+            width: 80%;
         }
 
         .logo-wrapper {
-            width: 45px;
-            height: 45px;
+            width: 48px;
+            height: 48px;
             flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .channel-logo {
             width: 100%;
             height: 100%;
-            background-color: #060913;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: #ff3333;
-            font-size: 18px;
             object-fit: contain;
-            border: 1px solid #ff333344;
+            border-radius: 6px;
+        }
+
+        .channel-fallback-logo {
+            font-size: 18px;
+            color: var(--text-muted);
         }
 
         .channel-name {
             font-size: 15px;
-            color: var(--text-color);
             font-weight: 600;
+            color: var(--text-color);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -460,123 +463,135 @@
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            min-width: 60px;
         }
 
-        .play-icon { 
-            color: #ff3333; 
-            font-size: 18px; 
-            display: inline-block;
+        .play-icon {
+            color: var(--text-muted);
+            font-size: 14px;
+            opacity: 0;
+            transform: translateX(-5px);
+            transition: all 0.2s;
+        }
+        .channel-row:hover .play-icon {
+            opacity: 1;
+            transform: translateX(0);
+            color: var(--brand-color);
         }
 
         .channel-live-badge {
-            background-color: #ff3333;
-            color: #ffffff;
+            background: var(--brand-color);
+            color: white;
             font-size: 10px;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-weight: 900;
-            display: none; 
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
             letter-spacing: 0.5px;
-            box-shadow: 0 0 8px rgba(255, 51, 51, 0.6);
-            animation: pulse-live 1.5s infinite alternate;
+            display: none;
+            box-shadow: 0 0 10px var(--brand-glow);
         }
 
-        @keyframes pulse-live {
-            from { transform: scale(1); opacity: 0.9; }
-            to { transform: scale(1.05); opacity: 1; }
-        }
+        .active-channel .play-icon { display: none !important; }
+        .active-channel .channel-live-badge { display: inline-block !important; }
 
-        .active-channel .play-icon {
-            display: none !important;
-        }
-
-        .active-channel .channel-live-badge {
-            display: inline-block !important;
-        }
-
-        .no-result { text-align: center; color: #ff3333; padding: 20px; font-weight: bold; }
-        #loading { text-align: center; font-size: 16px; color: #ff3333; margin-top: 40px; font-weight: bold; }
-
+        .no-result { text-align: center; color: var(--text-muted); padding: 40px; font-weight: 500; font-size: 14px; }
+        #loading { text-align: center; font-size: 14px; color: var(--text-muted); margin-top: 60px; font-weight: 500; }
+        
+        /* 🖥️ ডেক্সটপ ও ল্যাপটপ লেআউট স্পেশাল ডিজাইন */
         @media (min-width: 951px) {
-            .app-layout { flex-direction: row; height: calc(100vh - 56px); }
+            .app-layout { flex-direction: row; height: calc(100vh - 69px); }
+            
             .player-section {
-                flex: 1.5; display: none; border-bottom: none;
-                border-right: 3px solid #ff3333; height: 100%;
-                display: flex; flex-direction: column;
-                padding: 20px; 
+                flex: 1.6;
+                display: none;
+                background: radial-gradient(circle at center, rgba(239, 68, 68, 0.04) 0%, #000 100%);
+                height: 100%;
+                border-bottom: none;
+                border-right: 1px solid var(--border-color);
+                padding: 24px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
             }
-            .video-container { width: 100%; flex: 1; aspect-ratio: auto; }
-            .main-content { flex: 1; height: 100%; overflow-y: auto; padding: 0 15px 20px 15px; display: flex; flex-direction: column; }
+            
+            .playing-now-bar {
+                background: transparent;
+                border-bottom: none;
+                padding: 0 0 16px 0;
+                font-size: 14px;
+            }
+
+            .video-container {
+                width: 100%;
+                flex: 1;
+                aspect-ratio: auto;
+                border-radius: 16px;
+                border: 1px solid rgba(255, 255, 255, 0.05);
+                box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            }
+
+            .main-content {
+                flex: 1;
+                height: 100%;
+                overflow-y: auto;
+                padding: 24px;
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .controls-wrapper { margin-top: 0; }
             .channel-list { flex: 1; overflow-y: auto; }
         }
 
+        /* 📱 ল্যান্ডস্কেপ ও ফুলস্ক্রিন সিনেমা মোড */
         @media (max-width: 950px) and (orientation: landscape) {
-            header, .controls-wrapper, .playing-now-bar, .main-content {
-                display: none !important;
-            }
-
-            body, html {
-                height: 100% !important;
-                width: 100% !important;
-                overflow: hidden !important;
-            }
+            header, .controls-wrapper, .playing-now-bar, .main-content { display: none !important; }
+            body, html { height: 100% !important; width: 100% !important; overflow: hidden !important; }
 
             .player-section, .video-container {
                 width: 100vw !important;
                 height: 100vh !important;
                 position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
+                top: 0 !important; left: 0 !important;
                 border: none !important;
                 z-index: 9999999 !important;
                 display: block !important;
                 aspect-ratio: auto !important;
-                padding: 0 !important; 
-                border-radius: 0 !important;
+                padding: 0 !important;
             }
-
-            .video-js {
-                width: 100vw !important;
-                height: 100vh !important;
-            }
-
-            .video-js video,
-            .video-js .vjs-tech {
-                object-fit: fill !important; 
-            }
+            .video-js { width: 100vw !important; height: 100vh !important; }
+            .video-js video { object-fit: fill !important; }
         }
     </style>
 </head>
 <body>
 
-    <!-- সাইডবার ড্রয়ার -->
+    <!-- সাইডবার ড্রয়ার ও ওভারলে -->
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleMenu()"></div>
     <div class="sidebar-drawer" id="sidebarDrawer">
         <div class="drawer-header">
             <h2>নিয়ন্ত্রণ প্যানেল</h2>
-            <button class="close-drawer-btn" onclick="toggleMenu()">✕</button>
+            <button class="close-drawer-btn" onclick="toggleMenu()"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="drawer-menu-items">
-            <!-- 🌓 থিম চেঞ্জার (অরিজিনাল ভেক্টর আইকন) -->
+            <!-- 🌓 থিম চেঞ্জার -->
             <div class="drawer-item" onclick="toggleTheme()">
                 <div class="icon-box"><i class="fa-solid fa-moon"></i></div>
                 <span>থিম পরিবর্তন (Light/Dark)</span>
             </div>
             
-            <!-- 🔄 প্লেলিস্ট রিফ্রেশ (অরিজিনাল ভেক্টর আইকন) -->
+            <!-- 🔄 প্লেলিস্ট রিফ্রেশ -->
             <div class="drawer-item" onclick="refreshPlaylist()">
-                <div class="icon-box"><i class="fa-solid fa-rotate"></i></div>
+                <div class="icon-box"><i class="fa-solid fa-arrows-rotate"></i></div>
                 <span>প্লেলিস্ট রিফ্রেশ করুন</span>
             </div>
             
-            <!-- ⚠️ রিপোর্ট (অরিজিনাল ভেক্টর আইকন) -->
-            <div class="drawer-item" onclick="alert('রিপোর্ট করার জন্য ধন্যবাদ! আমরা লিংকটি পরীক্ষা করব।')">
-                <div class="icon-box"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                <span>চ্যানেল অচল? রিপোর্ট করুন</span>
-            </div>
+            <!-- 🎯 টেলিগ্রাম কমিউনিটি -->
+            <a href="https://t.me/banglatvlivefree" target="_blank" class="drawer-item">
+                <div class="icon-box"><i class="fa-brands fa-telegram"></i></div>
+                <span>টেলিগ্রাম চ্যানেল (লিংক)</span>
+            </a>
             
-            <!-- 💬 ফেসবুক সাপোর্ট (অরিজিনাল অফিশিয়াল ব্র্যান্ডেড আইকন) -->
+            <!-- 💬 ফেসবুক সাপোর্ট -->
             <a href="https://www.facebook.com/ahmed.bd.fb" target="_blank" class="drawer-item">
                 <div class="icon-box"><i class="fa-brands fa-facebook-messenger"></i></div>
                 <span>ফেসবুক পেজ (সাপোর্ট)</span>
@@ -584,21 +599,21 @@
         </div>
     </div>
 
-    <!-- হেডার এরিয়া -->
+    <!-- হেডার জোন -->
     <header>
         <div class="header-left">
-            <button class="menu-btn" id="menuBtn" onclick="toggleMenu()">☰</button>
+            <button class="menu-btn" id="menuBtn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button>
             <h1>এস এ লাইভ টিভি</h1>
         </div>
         <div class="channel-count-badge" id="totalChannels">CH-0</div>
     </header>
 
     <div class="app-layout">
-        <!-- প্লেয়ার সেকশন -->
+        <!-- প্রিমিয়াম প্লেয়ার উইন্ডো -->
         <div class="player-section" id="playerSection">
             <div class="playing-now-bar">
                 <span class="notice-live-dot"></span>
-                <span>এখন দেখছেন: <span id="playingTitle" style="color: #ff4d4d; text-shadow: 0 0 8px rgba(255,51,51,0.4);">কোনো চ্যানেল সিলেক্ট করা নেই</span></span>
+                <span>এখন দেখছেন: <span id="playingTitle" style="color: var(--brand-color);">কোনো চ্যানেল সিলেক্ট করা নেই</span></span>
             </div>
             <div class="video-container" id="videoContainer">
                 <video id="live-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" playsinline>
@@ -607,24 +622,25 @@
             </div>
         </div>
 
-        <!-- মেইন কনটেন্ট -->
+        <!-- কন্টেন্ট হাব -->
         <div class="main-content">
-            <div class="controls-wrapper" id="controlsWrapper" style="padding-top: 15px; padding-bottom: 15px;">
+            <div class="controls-wrapper" id="controlsWrapper">
                 <div class="category-select-wrapper">
                     <select class="category-dropdown" id="categoryDropdown" onchange="filterCategory(this.value)">
                         <option value="All">All Categories</option>
                     </select>
                 </div>
                 <div class="search-container">
-                    <input type="text" class="search-input" id="searchBox" placeholder="চ্যানেল সার্চিং..." oninput="searchChannel()">
+                    <input type="text" class="search-input" id="searchBox" placeholder="চ্যানেল সার্চ করুন..." oninput="searchChannel()">
                 </div>
             </div>
 
-            <div id="loading">সার্ভার থেকে চ্যানেল লিস্ট রিড করা হচ্ছে... একটু অপেক্ষা করুন।</div>
+            <div id="loading"><i class="fa-solid fa-circle-notch fa-spin" style="margin-right: 8px;"></i> ক্লাউড সার্ভার থেকে চ্যানেল লোড হচ্ছে...</div>
             <div class="channel-list" id="channelList"></div>
         </div>
     </div>
 
+    <!-- ভিডিও ইঞ্জিন কোড -->
     <script src="https://vjs.zencdn.net/8.3.0/video.js"></script>
     
     <script>
@@ -644,15 +660,12 @@
         let lastUserCategory = 'All'; 
 
         function toggleMenu() {
-            const drawer = document.getElementById('sidebarDrawer');
-            const overlay = document.getElementById('drawerOverlay');
-            drawer.classList.toggle('open');
-            overlay.classList.toggle('show');
+            document.getElementById('sidebarDrawer').classList.toggle('open');
+            document.getElementById('drawerOverlay').classList.toggle('show');
         }
 
         function toggleTheme() {
-            const currentTheme = document.body.getAttribute('data-theme');
-            if (currentTheme === 'light') {
+            if (document.body.getAttribute('data-theme') === 'light') {
                 document.body.removeAttribute('data-theme');
             } else {
                 document.body.setAttribute('data-theme', 'light');
@@ -663,7 +676,6 @@
         function refreshPlaylist() {
             toggleMenu();
             document.getElementById('loading').style.display = 'block';
-            document.getElementById('loading').innerText = "প্লেলিস্ট রিফ্রেশ করা হচ্ছে...";
             document.getElementById('channelList').innerHTML = '';
             currentUrlIndex = 0;
             fetchPlaylist();
@@ -671,17 +683,17 @@
 
         async function fetchPlaylist() {
             if (currentUrlIndex >= fetchUrls.length) {
-                document.getElementById('loading').innerHTML = "সব কটি কানেকশন ব্যর্থ হয়েছে।";
+                document.getElementById('loading').innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i> নেটওয়ার্ক কানেকশন ব্যর্থ হয়েছে।";
                 return;
             }
             try {
                 const response = await fetch(fetchUrls[currentUrlIndex]);
-                if (!response.ok) throw new Error('Load failed');
+                if (!response.ok) throw new Error('Load error');
                 const textData = await response.text();
                 if(textData && textData.includes('#EXTM3U')) {
                     parseM3U(textData);
                 } else {
-                    throw new Error('Data format error');
+                    throw new Error('Format error');
                 }
             } catch (err) {
                 currentUrlIndex++;
@@ -750,16 +762,15 @@
                 row.onclick = function() { playVideo(ch.name, ch.url, this); };
 
                 let logoHtml = ch.logo ? `<img class="channel-logo" src="${ch.logo}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">` : '';
-                const fallbackLetter = ch.name.charAt(0).toUpperCase();
-                const letterHtml = `<div class="channel-logo" style="display: ${ch.logo ? 'none' : 'flex'}">${fallbackLetter}</div>`;
+                const fallbackHtml = `<div class="channel-fallback-logo" style="display: ${ch.logo ? 'none' : 'flex'}"><i class="fa-solid fa-tv"></i></div>`;
 
                 row.innerHTML = `
                     <div class="channel-left">
-                        <div class="logo-wrapper">${logoHtml}${letterHtml}</div>
+                        <div class="logo-wrapper">${logoHtml}${fallbackHtml}</div>
                         <div class="channel-name">${ch.name}</div>
                     </div>
                     <div class="channel-right-action">
-                        <div class="play-icon">▶</div>
+                        <div class="play-icon"><i class="fa-solid fa-play"></i></div>
                         <span class="channel-live-badge">LIVE</span>
                     </div>
                 `;
@@ -817,7 +828,6 @@
             container.addEventListener('touchstart', function(e) {
                 const now = new Date().getTime();
                 const timespan = now - lastTapTime;
-                
                 if (timespan < 300 && timespan > 0) {
                     e.preventDefault(); 
                     toggleZoomState();
@@ -832,9 +842,7 @@
 
             function toggleZoomState() {
                 const playerEl = document.getElementById('live-player');
-                if (playerEl) {
-                    playerEl.classList.toggle('forced-zoom');
-                }
+                if (playerEl) playerEl.classList.toggle('forced-zoom');
             }
         }
 
@@ -848,13 +856,12 @@
                 createEl: function() {
                     return videojs.dom.createEl('button', {
                         className: 'vjs-custom-rotate-button vjs-control vjs-button',
-                        innerHTML: '🔄',
+                        innerHTML: '<i class="fa-solid fa-screen-rotation"></i>',
                         title: 'Rotate Screen'
                     });
                 },
                 handleClick: function() {
                     if(window.innerWidth > 950) return;
-                    
                     const container = document.getElementById('playerSection');
                     if (!document.fullscreenElement && !document.webkitFullscreenElement) {
                         if (container.requestFullscreen) container.requestFullscreen();
@@ -865,7 +872,6 @@
                     }
                 }
             });
-            
             videojs.registerComponent('RotateButton', RotateButton);
             player.getChild('controlBar').addChild('RotateButton', {}, player.getChild('controlBar').children_.length - 1);
         }
@@ -876,16 +882,12 @@
 
             function checkOrientation() {
                 if(window.innerWidth > 950) return;
-
                 if (window.innerWidth > window.innerHeight) {
                     document.body.style.setProperty('--orientation-status', 'landscape');
-                    document.querySelector('.app-layout').parentElement.classList.add('landscape-mode');
                 } else {
                     document.body.style.setProperty('--orientation-status', 'portrait');
-                    document.querySelector('.app-layout').parentElement.classList.remove('landscape-mode');
                 }
             }
-            
             checkOrientation();
         }
 
