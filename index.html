@@ -386,7 +386,7 @@
             align-items: center;
             gap: 15px;
             overflow: hidden;
-            width: 85%;
+            width: 75%; /* ডান পাশের ব্যাজের জন্য জায়গা রাখা হলো */
         }
 
         .logo-wrapper {
@@ -410,20 +410,6 @@
             border: 1px solid #ff333344;
         }
 
-        .channel-live-badge {
-            background-color: #ff3333;
-            color: #ffffff;
-            font-size: 9px;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 900;
-            display: none; 
-        }
-
-        .active-channel .channel-live-badge {
-            display: inline-block;
-        }
-
         .channel-name {
             font-size: 15px;
             color: var(--text-color);
@@ -433,7 +419,48 @@
             text-overflow: ellipsis;
         }
 
-        .play-icon { color: #ff3333; font-size: 18px; }
+        /* 🎯 ডান পাশের কন্ট্রোল কন্টেইনার (প্লে আইকন ও লাইভ ব্যাজ) */
+        .channel-right-action {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            min-width: 60px;
+        }
+
+        .play-icon { 
+            color: #ff3333; 
+            font-size: 18px; 
+            display: inline-block;
+        }
+
+        /* 🔴 নতুন লাইভ ব্যাজ স্টাইল - যা একদম ডান পাশে থাকবে */
+        .channel-live-badge {
+            background-color: #ff3333;
+            color: #ffffff;
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 900;
+            display: none; /* ডিফল্ট অবস্থায় লুকানো থাকবে */
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 8px rgba(255, 51, 51, 0.6);
+            animation: pulse-live 1.5s infinite alternate;
+        }
+
+        @keyframes pulse-live {
+            from { transform: scale(1); opacity: 0.9; }
+            to { transform: scale(1.05); opacity: 1; }
+        }
+
+        /* ⚡ চ্যানেল একটিভ বা প্লে হলে ডান পাশের প্লে আইকন লুকিয়ে লাইভ লেখা দেখাবে */
+        .active-channel .play-icon {
+            display: none !important;
+        }
+
+        .active-channel .channel-live-badge {
+            display: inline-block !important;
+        }
+
         .no-result { text-align: center; color: #ff3333; padding: 20px; font-weight: bold; }
         #loading { text-align: center; font-size: 16px; color: #ff3333; margin-top: 40px; font-weight: bold; }
 
@@ -687,10 +714,12 @@
                 row.innerHTML = `
                     <div class="channel-left">
                         <div class="logo-wrapper">${logoHtml}${letterHtml}</div>
-                        <span class="channel-live-badge">LIVE</span>
                         <div class="channel-name">${ch.name}</div>
                     </div>
-                    <div class="play-icon">▶</div>
+                    <div class="channel-right-action">
+                        <div class="play-icon">▶</div>
+                        <span class="channel-live-badge">LIVE</span>
+                    </div>
                 `;
                 listContainer.appendChild(row);
             });
@@ -786,7 +815,6 @@
                 handleClick: function() {
                     if(window.innerWidth > 950) return;
                     
-                    // ম্যানুয়ালি ক্লিক করলে ব্রাউজার ফুলস্ক্রিন রিকোয়েস্ট পাঠাবে
                     const container = document.getElementById('playerSection');
                     if (!document.fullscreenElement && !document.webkitFullscreenElement) {
                         if (container.requestFullscreen) container.requestFullscreen();
@@ -804,17 +832,14 @@
 
         /* ওরিয়েন্টেশন ট্র্যাকিং */
         function setupOrientationTrigger() {
-            // স্ক্রিন সাইজ ও রোটেশন ট্র্যাক করার নিরাপদ ইভেন্ট
             window.addEventListener("resize", checkOrientation);
             window.addEventListener("orientationchange", checkOrientation);
 
             function checkOrientation() {
                 if(window.innerWidth > 950) return;
 
-                // যদি প্রস্থ উচ্চতার চেয়ে বেশি হয় তার মানে ফোন ঘুরানো হয়েছে (Landscape)
                 if (window.innerWidth > window.innerHeight) {
                     document.body.style.setProperty('--orientation-status', 'landscape');
-                    // ভিডিও ফুল স্ক্রিন ক্লাসে রূপান্তরিত করার জন্য ১টি সেফটি ক্লাস পুশ করা হলো
                     document.querySelector('.app-layout').parentElement.classList.add('landscape-mode');
                 } else {
                     document.body.style.setProperty('--orientation-status', 'portrait');
@@ -822,7 +847,6 @@
                 }
             }
             
-            // ইনিশিয়াল চেক
             checkOrientation();
         }
 
