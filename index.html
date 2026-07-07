@@ -305,19 +305,27 @@
             overflow: hidden;
         }
 
-        /* 🎬 ভিডিও প্লেয়ার স্টাইল - কোনো ক্রপ ছাড়া ফিট (Contain) */
         .video-js {
             background-color: #000 !important;
             width: 100% !important;
             height: 100% !important;
         }
 
+        /* 📱 ডিফল্ট মোড (সোজা স্ক্রিন): ভিডিও অরিজিনাল রেশিওতে থাকবে, ক্রপ বা স্ট্রেচ হবে না */
         .video-js video,
         .video-js .vjs-tech {
-            object-fit: contain !important; /* ভিডিও ক্রপ হবে না, অরিজিনাল রেশিও থাকবে */
+            object-fit: contain !important; 
         }
 
-        /* 🔄 কাস্টম জলদি রোটেট বাটন */
+        /* 🔄 ফুল স্ক্রিন বা ল্যান্ডস্কেপ মোড: ভিডিও পুরো স্ক্রিন জুড়ে ১০০% ফিট (স্ট্রেচ) হয়ে যাবে */
+        body.landscape-mode .video-js video,
+        body.landscape-mode .vjs-tech,
+        .video-js.vjs-fullscreen video,
+        .video-js.vjs-fullscreen .vjs-tech {
+            object-fit: fill !important; 
+        }
+
+        /* কাস্টম জলদি রোটেট বাটন */
         .vjs-custom-rotate-button {
             cursor: pointer;
             font-size: 1.6em;
@@ -694,7 +702,7 @@
             
             if (!player) {
                 player = videojs('live-player');
-                addCustomRotateButton(); // 🔄 কাস্টম জলদি রোটেট বাটন অ্যাড করা
+                addCustomRotateButton(); 
                 setupOrientationTrigger();
             }
             player.src({ src: url, type: 'application/x-mpegURL' });
@@ -703,7 +711,7 @@
             if(window.innerWidth <= 950) window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        /* 🔄 প্লেয়ারের কন্ট্রোল বারে কাস্টম রোটেশন বাটন অ্যাড করা */
+        /* 🔄 কাস্টম রোটেশন বাটন */
         function addCustomRotateButton() {
             const Button = videojs.getComponent('Button');
             const RotateButton = videojs.extend(Button, {
@@ -723,12 +731,10 @@
                     
                     const container = document.getElementById('videoContainer');
                     if (!document.body.classList.contains('landscape-mode')) {
-                        // সরাসরি ইনস্ট্যান্ট ল্যান্ডস্কেপ মোড চালু করা
                         document.body.classList.add('landscape-mode');
                         if (container.requestFullscreen) container.requestFullscreen();
                         else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
                     } else {
-                        // এক্সিট ল্যান্ডস্কেপ মোড
                         document.body.classList.remove('landscape-mode');
                         if (document.exitFullscreen) document.exitFullscreen();
                         else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
@@ -740,7 +746,7 @@
             player.getChild('controlBar').addChild('RotateButton', {}, player.getChild('controlBar').children_.length - 1);
         }
 
-        /* অটো এবং ম্যানুয়াল ওরিয়েন্টেশন ট্রিগার ফিক্স */
+        /* ওরিয়েন্টেশন ট্রিগার ফিক্স */
         function setupOrientationTrigger() {
             const orientationMatcher = window.matchMedia("(orientation: landscape)");
             
