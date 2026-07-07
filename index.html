@@ -237,12 +237,12 @@
             pointer-events: auto;
         }
 
-        /* সার্চ ও ক্যাটাগরি কনটেইনার */
+        /* সার্চ ও ক্যাটাগরি বার (স্টিকি) */
         .controls-wrapper {
             background-color: var(--panel-bg);
             border-bottom: 1px solid var(--border-color);
             padding: 10px 15px;
-            display: none; /* প্লেলিস্ট লোড হলে জাভাস্ক্রিপ্ট দিয়ে flex করা হবে */
+            display: none; 
             align-items: center;
             gap: 10px;
             position: sticky;
@@ -315,7 +315,7 @@
         .main-content {
             flex: 1;
             overflow-y: auto;
-            padding: 0 15px 15px 15px; /* ফিক্সড স্টিকি বারের জন্য প্যাডিং অ্যাডজাস্টমেন্ট */
+            padding: 0 15px 15px 15px; 
             position: relative;
         }
 
@@ -358,7 +358,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-top: 15px; /* স্টিকি বারের পর সামান্য গ্যাপ */
+            margin-top: 15px; 
         }
 
         .channel-row {
@@ -470,7 +470,7 @@
         @media (min-width: 951px) {
             .app-layout {
                 flex-direction: row; 
-                height: calc(100vh - 56px); /* হেডার বাদ দিয়ে পুরো স্ক্রিন */
+                height: calc(100vh - 56px); 
             }
             .player-section {
                 flex: 1.5; 
@@ -483,7 +483,7 @@
             }
             .video-container {
                 width: 100%;
-                flex: 1; /* ডেক্সটপে প্লেয়ার বাকি অংশ জুড়ে থাকবে */
+                flex: 1; 
                 aspect-ratio: auto;
             }
             .main-content {
@@ -500,36 +500,33 @@
             }
         }
 
-        /* মোবাইল ল্যান্ডস্কেপ মোড */
-        @media (max-width: 950px) and (orientation: landscape) {
-            html, body {
-                overflow: hidden !important;
-                height: 100vh !important;
-                width: 100vw !important;
-                position: fixed !important;
-            }
-            header, .controls-wrapper, .playing-now-bar, .main-content {
-                display: none !important; 
-            }
-            .player-section {
-                width: 100vw !important;
-                height: 100vh !important;
-                position: fixed !important;
-                top: 0; left: 0;
-                border: none !important;
-                z-index: 999999 !important;
-                display: block !important;
-            }
-            .video-container {
-                width: 100vw !important;
-                height: 100vh !important;
-                aspect-ratio: auto !important;
-            }
-            .video-js, .video-js video {
-                width: 100vw !important;
-                height: 100vh !important;
-                object-fit: fill !important; 
-            }
+        /* 📱 মোবাইলের জন্য ফুলস্ক্রিন ল্যান্ডস্কেপ CSS ফিক্স */
+        body.landscape-mode header,
+        body.landscape-mode .controls-wrapper,
+        body.landscape-mode .playing-now-bar,
+        body.landscape-mode .main-content {
+            display: none !important;
+        }
+
+        body.landscape-mode .player-section {
+            width: 100vw !important;
+            height: 100vh !important;
+            position: fixed !important;
+            top: 0; left: 0;
+            border: none !important;
+            z-index: 999999 !important;
+            display: block !important;
+        }
+
+        body.landscape-mode .video-container {
+            width: 100vw !important;
+            height: 100vh !important;
+            aspect-ratio: auto !important;
+        }
+
+        body.landscape-mode .video-js {
+            width: 100vw !important;
+            height: 100vh !important;
         }
     </style>
 </head>
@@ -572,21 +569,21 @@
     </header>
 
     <div class="app-layout">
-        <!-- প্লেয়ার সেকশন (ভিডিও সবার উপরে থাকবে) -->
+        <!-- প্লেয়ার সেকশন -->
         <div class="player-section" id="playerSection">
             <div class="playing-now-bar">
                 এখন দেখছেন: <span id="playingTitle">কোনো চ্যানেল সিলেক্ট করা নেই</span>
             </div>
-            <div class="video-container">
+            <div class="video-container" id="videoContainer">
                 <video id="live-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" playsinline>
                     <p class="vjs-no-js">আপনার ব্রাউজারটি এই প্লেয়ারটি সাপোর্ট করছে না।</p>
                 </video>
             </div>
         </div>
 
-        <!-- মেইন কনটেন্ট (সার্চ অপশন এখন ভিডিও প্লেয়ারের নিচে এবং স্টিকি করা) -->
+        <!-- মেইন কনটেন্ট -->
         <div class="main-content">
-            <!-- 🔍 সার্চ এবং ক্যাটাগরি বার (স্টিকি করা হয়েছে) -->
+            <!-- 🔍 সার্চ এবং ক্যাটাগরি বার (স্টিকি) -->
             <div class="controls-wrapper" id="controlsWrapper" style="padding-top: 15px; padding-bottom: 15px;">
                 <div class="search-container">
                     <input type="text" class="search-input" id="searchBox" placeholder="চ্যানেলের নাম লিখুন..." oninput="searchChannel()">
@@ -731,7 +728,6 @@
                 const fallbackLetter = ch.name.charAt(0).toUpperCase();
                 const letterHtml = `<div class="channel-logo" style="display: ${ch.logo ? 'none' : 'flex'}">${fallbackLetter}</div>`;
 
-                // এখানে সিরিয়াল নাম্বার জেনারেট করার অংশটি পুরোপুরি বাদ দেওয়া হয়েছে
                 row.innerHTML = `
                     <div class="channel-left">
                         <div class="logo-wrapper">${logoHtml}${letterHtml}</div>
@@ -775,11 +771,58 @@
             const pSection = document.getElementById('playerSection');
             pSection.style.display = (window.innerWidth > 950) ? 'flex' : 'block';
             
-            if (!player) player = videojs('live-player');
+            if (!player) {
+                player = videojs('live-player');
+                // ল্যান্ডস্কেপ ট্র্যাকিং স্ক্রিপ্ট (স্মার্ট ফুলস্ক্রিন ট্রিগার)
+                setupOrientationTrigger();
+            }
             player.src({ src: url, type: 'application/x-mpegURL' });
             player.play();
             
             if(window.innerWidth <= 950) window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /* 🔄 স্মার্ট ল্যান্ডস্কেপ ফুলস্ক্রিন হ্যান্ডলার (জাভাস্ক্রিপ্ট API বেসড) */
+        function setupOrientationTrigger() {
+            const orientationMatcher = window.matchMedia("(orientation: landscape)");
+            
+            function handleOrientationChange(m) {
+                if(window.innerWidth > 950) return; // পিসির জন্য দরকার নেই
+                
+                const container = document.getElementById('videoContainer');
+                if (m.matches) {
+                    // স্ক্রিন ল্যান্ডস্কেপ হলে ক্লাস যুক্ত করবে এবং ফুলস্ক্রিন রিকোয়েস্ট করবে
+                    document.body.classList.add('landscape-mode');
+                    if (container.requestFullscreen) container.requestFullscreen();
+                    else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
+                    else if (container.msRequestFullscreen) container.msRequestFullscreen();
+                } else {
+                    // সোজা করলে ফুলস্ক্রিন এক্সিট করবে
+                    document.body.classList.remove('landscape-mode');
+                    if (document.exitFullscreen) document.exitFullscreen();
+                    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                    else if (document.msExitFullscreen) document.msExitFullscreen();
+                }
+            }
+
+            // ওরিয়েন্টেশন পরিবর্তনের লিসেনার
+            try {
+                orientationMatcher.addEventListener("change", handleOrientationChange);
+            } catch (e) {
+                orientationMatcher.addListener(handleOrientationChange); // ওল্ড ব্রাউজার সাপোর্ট
+            }
+
+            // ফুলস্ক্রিন ম্যানুয়ালি এক্সিট করলে যাতে লেআউট সোজা হয়ে যায়
+            document.addEventListener('fullscreenchange', () => {
+                if (!document.fullscreenElement) {
+                    document.body.classList.remove('landscape-mode');
+                }
+            });
+            document.addEventListener('webkitfullscreenchange', () => {
+                if (!document.webkitFullscreenElement) {
+                    document.body.classList.remove('landscape-mode');
+                }
+            });
         }
 
         window.onload = fetchPlaylist;
