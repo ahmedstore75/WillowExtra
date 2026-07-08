@@ -162,6 +162,40 @@
         .video-js, .native-player-style { width: 100% !important; height: 100% !important; }
         .video-js.forced-zoom video, .forced-zoom { object-fit: cover !important; }
 
+        /* 👈 👉 অদৃশ্য নেভিগেশন টাচ জোন (চ্যানেল চেঞ্জার) */
+        .player-nav-zone {
+            position: absolute;
+            top: 0;
+            bottom: 45px; /* ভিডিও কন্ট্রোল বারের উপরে থাকবে যেন প্লে/পজ করতে সমস্যা না হয় */
+            width: 20%;   /* প্লেয়ারের দুই পাশের ২০% জায়গা জুড়েই ক্লিক কাজ করবে */
+            z-index: 10;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0);
+            font-size: 24px;
+            transition: all 0.2s ease;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .player-nav-left {
+            left: 0;
+        }
+        .player-nav-right {
+            right: 0;
+        }
+        /* হোভার করলে হালকা ইঙ্গিত দেবে */
+        .player-nav-zone:hover {
+            background: rgba(0, 0, 0, 0.2);
+            color: rgba(255, 255, 255, 0.6);
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+        }
+        .player-nav-zone:active {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--brand-color);
+        }
+
         /* 📢 নোটিশ বার */
         .app-notice-bar {
             background: var(--notice-bg);
@@ -296,7 +330,7 @@
             width: 100%;
         }
         
-        /* 💎 ওটিটি স্টাইল গ্রিড লেআউট (স্ক্রিনের ভেতর পারফেক্টলি লকড) */
+        /* 💎 ওটিটি স্টাইল গ্রিড লেআউট */
         .channel-list { 
             display: grid; 
             grid-template-columns: repeat(2, 1fr); 
@@ -325,7 +359,7 @@
             overflow: hidden;
             width: 100%;
             max-width: 100%;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2; 1);
         }
         .channel-row:hover { 
             background: var(--card-hover); 
@@ -489,7 +523,6 @@
                 width: 100%;
             }
 
-            /* ডেক্সটপে পারফেক্ট ৩ কলাম গ্রিড লেআউট */
             .channel-list, #loadingLayout { 
                 grid-template-columns: repeat(3, 1fr); 
                 gap: 12px;
@@ -558,6 +591,15 @@
         <div class="player-left-column">
             <div class="player-section" id="playerSection">
                 <div class="video-container" id="videoContainer">
+                    
+                    <div class="player-nav-zone player-nav-left" onclick="navigateChannel('prev')">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </div>
+
+                    <div class="player-nav-zone player-nav-right" onclick="navigateChannel('next')">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+
                     <video id="live-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" playsinline>
                         <p class="vjs-no-js">Your browser does not support this player.</p>
                     </video>
@@ -609,7 +651,6 @@
         let isFirstInit = true; 
         const githubUrl = 'https://raw.githubusercontent.com/ahmedstore75/Iptvbdlive/main/mixiptvchannel.m3u';
         
-        // অল্টারনেটিভ শক্তিশালী CORS প্রক্সি মেকানিজম
         const fetchUrls = [
             githubUrl,
             'https://corsproxy.io/?' + encodeURIComponent(githubUrl),
@@ -618,9 +659,12 @@
 
         let currentUrlIndex = 0;
         let allChannels = [];
+        let displayedChannels = []; // বর্তমানে স্ক্রিনে যে চ্যানেলগুলো দেখা যাচ্ছে (সার্চ/ক্যাটাগরি ফিল্টার করা)
+        let activeChannelIndex = -1; // বর্তমান সচল চ্যানেলের ইনডেক্স ট্র্যাকিং
+        
         let currentSelectedCategory = 'All'; 
         let lastUserCategory = 'All'; 
-        
+        let searchTimeout;
         let currentLang = localStorage.getItem('bdTvLang') || 'bn';
         
         const languages = {
@@ -757,14 +801,15 @@
 
             document.getElementById('totalChannels').innerText = "CH-" + allChannels.length;
             populateCategoryDropdown(categories);
-            renderChannels(allChannels); 
+            
+            displayedChannels = [...allChannels]; // শুরুতে সব চ্যানেলই থাকবে
+            renderChannels(displayedChannels); 
             document.getElementById('loadingLayout').style.display = 'none';
             
             initVideoPlayerEngine();
 
-            if (allChannels.length > 0 && window.innerWidth > 950) {
-                const firstRow = document.querySelector('.channel-row');
-                if(firstRow) firstRow.click();
+            if (displayedChannels.length > 0 && window.innerWidth > 950) {
+                playChannelAt(0);
             }
         }
 
@@ -784,18 +829,20 @@
         }
 
         function switchToHlsBackup() {
-            const currentActiveRow = document.querySelector('.channel-row.active-channel');
-            if(!currentActiveRow) return;
+            if (activeChannelIndex === -1 || displayedChannels.length === 0) return;
+            const channelObj = displayedChannels[activeChannelIndex];
 
             if (player) { try { player.dispose(); }catch(e){} player = null; }
 
             const container = document.getElementById('videoContainer');
-            container.innerHTML = `<video id="live-player" class="native-player-style" controls autoplay playsinline style="width:100%; height:100%; background:#000;"></video>`;
+            
+            // রি-ইঞ্জেক্ট নেভিগেশন বাটনসহ প্লেয়ার
+            container.innerHTML = `
+                <div class="player-nav-zone player-nav-left" onclick="navigateChannel('prev')"><i class="fa-solid fa-chevron-left"></i></div>
+                <div class="player-nav-zone player-nav-right" onclick="navigateChannel('next')"><i class="fa-solid fa-chevron-right"></i></div>
+                <video id="live-player" class="native-player-style" controls autoplay playsinline style="width:100%; height:100%; background:#000;"></video>
+            `;
             const videoElement = document.getElementById('live-player');
-
-            const currentActiveName = currentActiveRow.querySelector('.channel-name').innerText;
-            const channelObj = allChannels.find(c => c.name === currentActiveName);
-            if(!channelObj) return;
 
             if (Hls.isSupported()) {
                 hlsBackupEngine = new Hls({ maxLoadingDelay: 4 });
@@ -832,10 +879,13 @@
                 return;
             }
 
-            channels.forEach(ch => {
+            channels.forEach((ch, index) => {
                 const row = document.createElement('div');
                 row.className = 'channel-row';
-                row.onclick = function() { playVideo(ch.name, ch.url, this); };
+                row.setAttribute('data-index', index);
+                if (index === activeChannelIndex) row.classList.add('active-channel');
+                
+                row.onclick = function() { playChannelAt(index); };
 
                 let logoHtml = ch.logo ? `<img class="channel-logo" src="${ch.logo}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">` : '';
                 const fallbackHtml = `<div class="channel-fallback-logo" style="display: ${ch.logo ? 'none' : 'flex'}"><i class="fa-solid fa-tv"></i></div>`;
@@ -853,26 +903,87 @@
             });
         }
 
+        // ইনডেক্স অনুযায়ী নির্দিষ্ট চ্যানেল প্লে করার ফাংশন
+        function playChannelAt(index) {
+            if (displayedChannels.length === 0 || index < 0 || index >= displayedChannels.length) return;
+            
+            activeChannelIndex = index;
+            const ch = displayedChannels[index];
+
+            // UI আপডেট (অ্যাক্টিভ চ্যানেল হাইলাইট করা)
+            document.querySelectorAll('.channel-row').forEach(row => row.classList.remove('active-channel'));
+            const activeRow = document.querySelector(`.channel-row[data-index="${index}"]`);
+            if (activeRow) {
+                activeRow.classList.add('active-channel');
+                activeRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+
+            isFirstInit = false; 
+            resetContainers();
+
+            player = videojs('live-player');
+            setupForcedDoubleTapZoom();
+
+            player.on('error', function() {
+                switchToHlsBackup();
+            });
+
+            try {
+                player.src({ src: ch.url, type: 'application/x-mpegURL' });
+                player.play();
+            } catch(e) {}
+        }
+
+        // 👈 👉 দুই পাশে ক্লিকের নেভিগেশন লজিক Engine
+        function navigateChannel(direction) {
+            if (displayedChannels.length === 0) return;
+            
+            let nextIndex = activeChannelIndex;
+            if (direction === 'next') {
+                nextIndex = activeChannelIndex + 1;
+                if (nextIndex >= displayedChannels.length) nextIndex = 0; // লিস্ট শেষ হলে আবার ১ নাম্বারে যাবে
+            } else if (direction === 'prev') {
+                nextIndex = activeChannelIndex - 1;
+                if (nextIndex < 0) nextIndex = displayedChannels.length - 1; // শুরুতে থাকলে শেষ চ্যানেলে যাবে
+            }
+            
+            playChannelAt(nextIndex);
+        }
+
         function filterCategory(category) {
             currentSelectedCategory = category; 
             if (document.getElementById('searchBox').value === '') lastUserCategory = category;
             document.getElementById('categoryDropdown').value = category;
 
             if (category === 'All') {
-                renderChannels(allChannels);
+                displayedChannels = [...allChannels];
             } else {
-                renderChannels(allChannels.filter(ch => ch.category === category));
+                displayedChannels = allChannels.filter(ch => ch.category === category);
             }
+            
+            activeChannelIndex = -1; // ফিল্টার চেঞ্জ হলে ট্র্যাকার রিসেট
+            renderChannels(displayedChannels);
         }
 
+        // আল্ট্রা-স্মুথ ৩০০ মিলিসেকেন্ড ডেবাউন্সড সার্চ
         function searchChannel() {
-            const query = document.getElementById('searchBox').value.toLowerCase().trim();
-            if (query !== '') {
-                document.getElementById('categoryDropdown').value = 'All'; 
-                renderChannels(allChannels.filter(ch => ch.name.toLowerCase().includes(query)));
-            } else {
-                filterCategory(lastUserCategory); 
-            }
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const query = document.getElementById('searchBox').value.toLowerCase().trim();
+                if (query !== '') {
+                    document.getElementById('categoryDropdown').value = 'All'; 
+                    displayedChannels = allChannels.filter(ch => ch.name.toLowerCase().includes(query));
+                } else {
+                    if (lastUserCategory === 'All') {
+                        displayedChannels = [...allChannels];
+                    } else {
+                        displayedChannels = allChannels.filter(ch => ch.category === lastUserCategory);
+                    }
+                    document.getElementById('categoryDropdown').value = lastUserCategory;
+                }
+                activeChannelIndex = -1;
+                renderChannels(displayedChannels);
+            }, 300);
         }
 
         function resetContainers() {
@@ -884,27 +995,12 @@
                 hlsBackupEngine.destroy();
                 hlsBackupEngine = null;
             }
-            document.getElementById('videoContainer').innerHTML = `<video id="live-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" playsinline></video>`;
-        }
-
-        function playVideo(name, url, clickedElement) {
-            isFirstInit = false; 
-            document.querySelectorAll('.channel-row.active-channel').forEach(row => row.classList.remove('active-channel'));
-            if(clickedElement) clickedElement.classList.add('active-channel');
-            
-            resetContainers();
-
-            player = videojs('live-player');
-            setupForcedDoubleTapZoom();
-
-            player.on('error', function() {
-                switchToHlsBackup();
-            });
-
-            try {
-                player.src({ src: url, type: 'application/x-mpegURL' });
-                player.play();
-            } catch(e) {}
+            const container = document.getElementById('videoContainer');
+            container.innerHTML = `
+                <div class="player-nav-zone player-nav-left" onclick="navigateChannel('prev')"><i class="fa-solid fa-chevron-left"></i></div>
+                <div class="player-nav-zone player-nav-right" onclick="navigateChannel('next')"><i class="fa-solid fa-chevron-right"></i></div>
+                <video id="live-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" playsinline></video>
+            `;
         }
 
         function runNativeFallback(element, url, name) {
@@ -918,6 +1014,9 @@
             const container = document.getElementById('videoContainer');
             let lastTapTime = 0;
             container.addEventListener('touchstart', function(e) {
+                // যদি ক্লিকটি নেভিগেশন জোনে হয়, তবে জুম ইভেন্ট ইগনোর করবে
+                if (e.target.classList.contains('player-nav-zone') || e.target.closest('.player-nav-zone')) return;
+                
                 const now = new Date().getTime();
                 if (now - lastTapTime < 300) {
                     e.preventDefault(); 
