@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>বাংলা টিভি</title>
     
+    <!-- 🌍 কোর লাইব্রেরী ও গ্লোবাল ফন্ট -->
     <link href="https://vjs.zencdn.net/8.3.0/video-js.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,7 +55,7 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
-            overflow-x: hidden;
+            overflow: hidden; /* পুরো বডির মেইন স্ক্রলিং বন্ধ */
             transition: background-color 0.3s, color 0.3s;
         }
 
@@ -108,24 +109,21 @@
         .drawer-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         .drawer-overlay.show { opacity: 1; pointer-events: auto; }
 
-        /* 🎬 ভিডিও প্লেয়ার এরিয়া (মোবাইল এবং ল্যাপটপ দুই জায়গাতেই স্থায়ী ফিক্সড লক) */
+        /* 📺 ভিডিও প্লেয়ার এরিয়া (মোবাইলে স্ক্রিনের ওপরে ১০০% ফিক্সড লকড) */
         .player-section {
             background: #000 !important; 
-            width: calc(100% - 24px) !important;
-            margin: 12px auto 0 auto !important; 
-            position: relative !important;
-            border-radius: 16px !important; 
-            overflow: hidden !important;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 15px var(--brand-glow) !important;
-            border: 1px solid rgba(239, 68, 68, 0.15) !important; 
-            display: block !important; /* স্ক্রিন থেকে কোনোভাবেই গায়েব হবে না */
-            min-height: 210px; /* খালি থাকলেও মোবাইল স্ক্রিনে জায়গা ধরে রাখবে */
+            width: 100% !important;
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 95 !important; /* স্ক্রল করার সময় এটি ওপরেই আটকে থাকবে */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 10px var(--brand-glow) !important;
+            border-bottom: 2px solid rgba(239, 68, 68, 0.3) !important; 
+            display: block !important;
         }
 
         .playing-now-bar {
-            background: rgba(0, 0, 0, 0.7); padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.8); padding: 10px 16px;
             font-size: 13px; display: flex; align-items: center; gap: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .notice-live-dot {
@@ -143,41 +141,66 @@
         .video-js.forced-zoom video, .forced-zoom { object-fit: cover !important; }
 
         /* 🔍 সার্চ ও ক্যাটাগরি জোন */
-        .sticky-controls-container { padding: 12px 12px 4px 12px; position: sticky; top: 0; z-index: 90; }
+        .sticky-controls-container { 
+            padding: 10px 12px; 
+            position: sticky; 
+            top: 0; 
+            z-index: 90; 
+            background: var(--bg-color);
+        }
         .controls-wrapper {
             background: var(--panel-bg); backdrop-filter: var(--glass-blur);
             border: 1px solid var(--border-color); border-radius: 12px;
-            padding: 10px; display: flex; align-items: center; gap: 10px;
+            padding: 8px; display: flex; align-items: center; gap: 8px;
         }
 
         .category-select-wrapper { position: relative; flex: 1; }
         .category-dropdown {
-            width: 100%; padding: 10px 14px; background-color: var(--input-bg);
+            width: 100%; padding: 10px 12px; background-color: var(--input-bg);
             border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-color);
-            font-size: 13px; font-weight: 500; outline: none; cursor: pointer; appearance: none;
+            font-size: 12px; font-weight: 500; outline: none; cursor: pointer; appearance: none;
         }
         .category-select-wrapper::after {
             content: "\f0d7"; font-family: "Font Awesome 6 Free"; font-weight: 900;
-            position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+            position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
             color: var(--brand-color); pointer-events: none;
         }
 
         .search-container { flex: 1.2; position: relative; }
         .search-input {
-            width: 100%; padding: 10px 14px 10px 36px; background-color: var(--input-bg);
+            width: 100%; padding: 10px 12px 10px 32px; background-color: var(--input-bg);
             border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-color);
-            font-size: 13px; outline: none;
+            font-size: 12px; outline: none;
         }
         .search-container::before {
             content: "\f002"; font-family: "Font Awesome 6 Free"; font-weight: 900;
-            position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--brand-color);
+            position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--brand-color);
         }
 
-        /* 📺 লেআউট সিস্টেম */
-        .app-layout { display: flex; flex-direction: column; flex: 1; overflow-y: auto; }
-        .right-column-wrapper { display: flex; flex-direction: column; width: 100%; }
-        .main-content { flex: 1; padding: 0 12px 20px 12px; }
-        .channel-list { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+        /* 📺 লেআউট এবং শুধু চ্যানেল লিস্ট স্ক্রলিং এরিয়া */
+        .app-layout { 
+            display: flex; 
+            flex-direction: column; 
+            flex: 1; 
+            overflow: hidden; /* পুরো লেআউটের মেইন বডি ফিক্সড */
+        }
+        
+        .right-column-wrapper { 
+            display: flex; 
+            flex-direction: column; 
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* শুধু এই অংশটুকু স্ক্রল হবে */
+        .main-content { 
+            flex: 1; 
+            padding: 0 12px 20px 12px; 
+            overflow-y: auto; 
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .channel-list { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
 
         .channel-row {
             background: var(--card-bg); border: 1px solid var(--border-color);
@@ -205,7 +228,7 @@
         .active-channel .channel-live-badge { display: inline-block !important; }
 
         .no-result { text-align: center; color: var(--text-muted); padding: 40px; font-size: 14px; }
-        #loading { text-align: center; font-size: 14px; color: var(--text-muted); margin-top: 60px; }
+        #loading { text-align: center; font-size: 14px; color: var(--text-muted); margin-top: 40px; }
         
         /* 💻 ল্যাপটপ লেআউট গ্রিড */
         @media (min-width: 951px) {
@@ -215,9 +238,9 @@
                 padding: 20px; flex: 1; height: calc(100vh - 70px);
                 max-width: 1600px; margin: 0 auto; width: 100%; overflow: hidden;
             }
-            .player-section { width: 100% !important; margin: 0 !important; display: flex !important; flex-direction: column; height: fit-content; align-self: start; min-height: auto; }
+            .player-section { width: 100% !important; margin: 0 !important; position: static !important; display: flex !important; flex-direction: column; height: fit-content; align-self: start; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6) !important; border: 1px solid rgba(239, 68, 68, 0.15) !important; }
             .right-column-wrapper { display: flex; flex-direction: column; overflow: hidden; height: 100%; background: var(--panel-bg); backdrop-filter: var(--glass-blur); border: 1px solid var(--border-color); border-radius: 16px; }
-            .sticky-controls-container { position: static; padding: 16px; border-bottom: 1px solid var(--border-color); }
+            .sticky-controls-container { position: static; padding: 16px; border-bottom: 1px solid var(--border-color); background: transparent; }
             .controls-wrapper { display: flex !important; background: transparent; border: none; padding: 0; }
             .main-content { max-width: 100%; margin: 0; padding: 16px; overflow-y: auto; height: 100%; }
             #loading { margin-top: 30px; }
@@ -269,6 +292,7 @@
     </header>
 
     <div class="app-layout">
+        <!-- 📺 ভিডিও প্লেয়ার এরিয়া (ওপরে স্টিকি/লক করা) -->
         <div class="player-section" id="playerSection">
             <div class="playing-now-bar">
                 <span class="notice-live-dot"></span>
@@ -281,6 +305,7 @@
             </div>
         </div>
 
+        <!-- 📑 কন্ট্রোলস এবং চ্যানেল লিস্টের সমন্বিত কন্টেইনার -->
         <div class="right-column-wrapper">
             <div class="sticky-controls-container">
                 <div class="controls-wrapper" id="controlsWrapper">
@@ -295,6 +320,7 @@
                 </div>
             </div>
 
+            <!-- শুধুমাত্র এই অংশ স্ক্রল হবে -->
             <div class="main-content">
                 <div id="loading"><i class="fa-solid fa-circle-notch fa-spin" style="margin-right: 8px; color: var(--brand-color);"></i> ক্লাউড সার্ভার থেকে চ্যানেল লোড হচ্ছে...</div>
                 <div class="channel-list" id="channelList"></div>
@@ -302,13 +328,14 @@
         </div>
     </div>
 
+    <!-- ভিডিও ইঞ্জিন স্ক্রিপ্ট (ভিডিও.জেএস এবং এইচএলএস ব্যাকআপ ইঞ্জিন) -->
     <script src="https://vjs.zencdn.net/8.3.0/video.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     
     <script>
         let player; 
         let hlsBackupEngine = null;
-        let isFirstInit = true; // প্রথমবার সোর্স ছাড়া ক্র্যাশ আটকানোর ফ্ল্যাগ
+        let isFirstInit = true; 
         const githubUrl = 'https://raw.githubusercontent.com/ahmedstore75/Iptvbdlive/refs/heads/main/mixiptvchannel.m3u';
         const fetchUrls = [
             githubUrl,
@@ -390,10 +417,8 @@
             document.getElementById('loading').style.display = 'none';
             document.getElementById('controlsWrapper').style.display = 'flex'; 
             
-            // প্লেয়ার কোর ইঞ্জিন ইনিশিয়ালাইজেশন (সোর্স ছাড়া ক্র্যাশ প্রুফ রান)
             initVideoPlayerEngine();
 
-            // ল্যাপটপে থাকলে অটো ১ম চ্যানেল চলবে
             if (allChannels.length > 0 && window.innerWidth > 950) {
                 const firstRow = document.querySelector('.channel-row');
                 if(firstRow) firstRow.click();
@@ -405,16 +430,14 @@
                 player = videojs('live-player');
                 setupForcedDoubleTapZoom();
 
-                // এরর হ্যান্ডলারে প্রথম রান চেক করার লজিক ফিক্স
                 player.on('error', function() {
                     if (isFirstInit) {
                         isFirstInit = false;
-                        return; // কোনো সোর্স না থাকলে প্রথমবার ক্র্যাশ স্কিপ করবে
+                        return; 
                     }
-                    console.log("ইঞ্জিন ১ ফেইল! ইঞ্জিন ২ (Hls.js) ট্রাই করা হচ্ছে...");
                     switchToHlsBackup();
                 });
-            } catch(e) { console.log("ইনিশিয়াল ইঞ্জিন বুট এরর স্কিপড"); }
+            } catch(e) {}
         }
 
         function switchToHlsBackup() {
@@ -427,7 +450,6 @@
             container.innerHTML = `<video id="live-player" class="native-player-style" controls autoplay playsinline style="width:100%; height:100%; background:#000;"></video>`;
             const videoElement = document.getElementById('live-player');
 
-            // গ্লোবাল ফাংশন থেকে ইউআরএল রিকভারি লজিক
             const chName = document.getElementById('playingTitle').innerText;
             const channelObj = allChannels.find(c => c.name === chName);
             if(!channelObj) return;
@@ -524,7 +546,7 @@
         }
 
         function playVideo(name, url, clickedElement) {
-            isFirstInit = false; // ইউজার ক্লিক করা মাত্রই সোর্স চেকিং একটিভ হবে
+            isFirstInit = false; 
             document.querySelectorAll('.channel-row.active-channel').forEach(row => row.classList.remove('active-channel'));
             if(clickedElement) clickedElement.classList.add('active-channel');
             
@@ -542,13 +564,7 @@
             try {
                 player.src({ src: url, type: 'application/x-mpegURL' });
                 player.play();
-            } catch(e) {
-                console.log("প্লেব্যাক ট্রাই এক্সেপশন");
-            }
-            
-            if (window.innerWidth <= 950) {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
+            } catch(e) {}
         }
 
         function runNativeFallback(element, url, name) {
