@@ -35,7 +35,6 @@
             --drawer-bg: rgba(3, 7, 18, 0.96);
             --glass-blur: blur(20px);
             --skeleton-bg: #1f2937;
-            /* 🔴 নোটিশের টেক্সট কালার ভেরিয়েবল */
             --notice-text-color: #ff3333; 
         }
 
@@ -115,7 +114,14 @@
         .drawer-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         .drawer-overlay.show { opacity: 1; pointer-events: auto; }
 
-        /* 📺 ভিডিও প্লেয়ার এরিয়া */
+        /* 📺 মোবাইল ভিডিও প্লেয়ার এরিয়া */
+        .player-left-column {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            flex-shrink: 0;
+        }
+
         .player-section {
             background: #000 !important; 
             width: calc(100% - 24px) !important;
@@ -127,7 +133,6 @@
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), 0 0 15px var(--brand-glow) !important;
             border: 1px solid rgba(239, 68, 68, 0.3) !important; 
             display: block !important;
-            flex-shrink: 0;
         }
 
         .playing-now-bar {
@@ -149,7 +154,7 @@
         .video-js, .native-player-style { width: 100% !important; height: 100% !important; }
         .video-js.forced-zoom video, .forced-zoom { object-fit: cover !important; }
 
-        /* 📢 প্রিমিয়াম চিকন নোটিশ বার (ডাইনামিক কালার চেঞ্জিং বর্ডার) */
+        /* 📢 প্রিমিয়াম চিকন নোটিশ বার */
         .app-notice-bar {
             background: rgba(239, 68, 68, 0.05);
             border: 1.5px solid #ff3333; 
@@ -182,7 +187,6 @@
             text-transform: uppercase;
         }
         
-        /* 🔄 মারকিউ কন্টেইনার এবং ফিক্সড টেক্সট সেটিংস */
         .notice-marquee-container {
             flex: 1;
             overflow: hidden;
@@ -281,7 +285,7 @@
 
         .no-result { text-align: center; color: var(--text-muted); padding: 40px; font-size: 14px; }
         
-        /* 🦴 কঙ্কাল লোডার (Skeleton Loader) */
+        /* 🦴 কঙ্কাল লোডার */
         .skeleton-item {
             background: var(--card-bg); border: 1px solid var(--border-color);
             border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;
@@ -296,20 +300,81 @@
             100% { opacity: 0.5; }
         }
 
-        /* 💻 ল্যাপটপ এবং ডেক্সটপ প্রফেশনাল গ্রিড লেআউট */
+        /* 💻 ল্যাপটপ এবং ডেক্সটপ প্রফেশনাল গ্রিড লেআউট (ফিক্সড সংস্করণ) */
         @media (min-width: 951px) {
             body { height: 100vh; overflow: hidden; }
             .app-layout {
-                display: grid; grid-template-columns: 1.6fr 1.1fr; gap: 24px;
-                padding: 20px; flex: 1; height: calc(100vh - 70px);
-                max-width: 1600px; margin: 0 auto; width: 100%; overflow: hidden;
+                display: grid; 
+                grid-template-columns: 1.6fr 1.1fr; 
+                gap: 24px;
+                padding: 20px; 
+                flex: 1; 
+                height: calc(100vh - 70px);
+                max-width: 1600px; 
+                margin: 0 auto; 
+                width: 100%; 
+                overflow: hidden;
             }
-            .player-section { width: 100% !important; margin: 0 !important; position: static !important; display: flex !important; flex-direction: column; height: fit-content; align-self: start; border-radius: 16px !important; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6) !important; border: 1px solid rgba(239, 68, 68, 0.15) !important; }
-            .app-notice-bar { margin: 10px 0 0 0; }
-            .right-column-wrapper { display: flex; flex-direction: column; overflow: hidden; height: 100%; background: var(--panel-bg); backdrop-filter: var(--glass-blur); border: 1px solid var(--border-color); border-radius: 16px; }
-            .sticky-controls-container { position: static; padding: 16px; border-bottom: 1px solid var(--border-color); background: transparent; }
-            .controls-wrapper { display: flex !important; background: transparent; border: none; padding: 0; }
-            .main-content { max-width: 100%; margin: 0; padding: 16px; overflow-y: auto; height: 100%; }
+            
+            /* বামপাশের কলাম স্ট্রাকচার ফিক্স */
+            .player-left-column {
+                display: flex !important;
+                flex-direction: column !important;
+                width: 100% !important;
+                height: 100% !important;
+                overflow: hidden;
+            }
+
+            .player-section { 
+                width: 100% !important; 
+                margin: 0 !important; 
+                position: static !important; 
+                display: flex !important; 
+                flex-direction: column; 
+                height: fit-content; 
+                border-radius: 16px !important; 
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6) !important; 
+                border: 1px solid rgba(239, 68, 68, 0.15) !important; 
+            }
+            
+            .app-notice-bar { 
+                margin: 16px 0 0 0 !important; 
+                width: 100% !important;
+            }
+            
+            /* ডানপাশের কলাম স্ট্রাকচার ফিক্স */
+            .right-column-wrapper { 
+                display: flex; 
+                flex-direction: column; 
+                overflow: hidden; 
+                height: 100%; 
+                background: var(--panel-bg); 
+                backdrop-filter: var(--glass-blur); 
+                border: 1px solid var(--border-color); 
+                border-radius: 16px; 
+            }
+            
+            .sticky-controls-container { 
+                position: static; 
+                padding: 16px; 
+                border-bottom: 1px solid var(--border-color); 
+                background: transparent; 
+            }
+            
+            .controls-wrapper { 
+                display: flex !important; 
+                background: transparent; 
+                border: none; 
+                padding: 0; 
+            }
+            
+            .main-content { 
+                max-width: 100%; 
+                margin: 0; 
+                padding: 16px; 
+                overflow-y: auto; 
+                height: 100%; 
+            }
         }
 
         /* 📱 ল্যান্ডস্কেপ মোড */
@@ -362,22 +427,23 @@
     </header>
 
     <div class="app-layout">
-        <div class="player-section" id="playerSection">
-            <div class="playing-now-bar">
-                <span class="notice-live-dot"></span>
-                <span><span id="langNowPlaying">এখন দেখছেন:</span> <span id="playingTitle" style="color: var(--brand-color); font-weight: 700;">কোনো চ্যানেল সিলেক্ট করা নেই</span></span>
-            </div>
-            <div class="video-container" id="videoContainer">
-                <video id="live-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" playsinline>
-                    <p class="vjs-no-js">Your browser does not support this player.</p>
-                </video>
-            </div>
-        </div>
-
-        <div class="app-notice-bar">
-            <span class="notice-badge" id="langNoticeBadge">নোটিশ</span>
-            <div class="notice-marquee-container" id="marqueeHolder">
+        <div class="player-left-column">
+            <div class="player-section" id="playerSection">
+                <div class="playing-now-bar">
+                    <span class="notice-live-dot"></span>
+                    <span><span id="langNowPlaying">এখন দেখছেন:</span> <span id="playingTitle" style="color: var(--brand-color); font-weight: 700;">কোনো চ্যানেল সিলেক্ট করা নেই</span></span>
                 </div>
+                <div class="video-container" id="videoContainer">
+                    <video id="live-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" playsinline>
+                        <p class="vjs-no-js">Your browser does not support this player.</p>
+                    </video>
+                </div>
+            </div>
+
+            <div class="app-notice-bar">
+                <span class="notice-badge" id="langNoticeBadge">নোটিশ</span>
+                <div class="notice-marquee-container" id="marqueeHolder"></div>
+            </div>
         </div>
 
         <div class="right-column-wrapper">
@@ -468,7 +534,6 @@
             toggleMenu();
         }
 
-        /* 🔧 মারকিউ লুপ ফিক্সড করার জন্য নিরাপদ ফাংশন */
         function updateNoticeMarquee(text) {
             const holder = document.getElementById('marqueeHolder');
             holder.innerHTML = `<marquee behavior="scroll" direction="left" scrollamount="4" loop="infinite">${text}</marquee>`;
@@ -486,7 +551,6 @@
             document.getElementById('langNowPlaying').innerText = lang.nowPlaying;
             document.getElementById('langNoticeBadge').innerText = lang.noticeBadge;
             
-            // মারকিউ আপডেট (স্থায়ী লুপ সহ)
             updateNoticeMarquee(lang.noticeText);
 
             document.getElementById('searchBox').placeholder = lang.searchPlaceholder;
