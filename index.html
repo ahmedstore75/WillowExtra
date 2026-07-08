@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>বাংলা টিভি</title>
     
-    <!-- 🌍 কোর লাইব্রেরী ও গ্লোবাল ফন্ট -->
     <link href="https://vjs.zencdn.net/8.3.0/video-js.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -153,7 +152,7 @@
         /* 📢 প্রিমিয়াম চিকন নোটিশ বার (ডাইনামিক কালার চেঞ্জিং বর্ডার) */
         .app-notice-bar {
             background: rgba(239, 68, 68, 0.05);
-            border: 1.5px solid #ff3333; /* ডিফল্ট বর্ডার */
+            border: 1.5px solid #ff3333; 
             margin: 0 12px 4px 12px;
             padding: 6px 10px;
             border-radius: 6px;
@@ -162,18 +161,15 @@
             gap: 8px;
             font-size: 12px;
             flex-shrink: 0;
-            
-            /* ⏳ বর্ডারের কালার অনবরত পরিবর্তনের এনিমেশন ট্র্যাকিং */
             animation: borderRainbow 8s infinite linear;
         }
 
-        /* 🌈 বর্ডার কালার পরিবর্তনের CSS এনিমেশন রুলস */
         @keyframes borderRainbow {
-            0% { border-color: #ff3333; box-shadow: 0 0 6px rgba(255, 51, 51, 0.2); }      /* লাল */
-            25% { border-color: #0070f3; box-shadow: 0 0 6px rgba(0, 112, 243, 0.2); }     /* নীল */
-            50% { border-color: #10b981; box-shadow: 0 0 6px rgba(16, 185, 129, 0.2); }    /* সবুজ */
-            75% { border-color: #7928ca; box-shadow: 0 0 6px rgba(121, 40, 202, 0.2); }    /* বেগুনি */
-            100% { border-color: #ff3333; box-shadow: 0 0 6px rgba(255, 51, 51, 0.2); }    /* পুনরায় লাল */
+            0% { border-color: #ff3333; box-shadow: 0 0 6px rgba(255, 51, 51, 0.2); }      
+            25% { border-color: #0070f3; box-shadow: 0 0 6px rgba(0, 112, 243, 0.2); }     
+            50% { border-color: #10b981; box-shadow: 0 0 6px rgba(16, 185, 129, 0.2); }    
+            75% { border-color: #7928ca; box-shadow: 0 0 6px rgba(121, 40, 202, 0.2); }    
+            100% { border-color: #ff3333; box-shadow: 0 0 6px rgba(255, 51, 51, 0.2); }    
         }
 
         .notice-badge {
@@ -185,9 +181,18 @@
             font-size: 10px;
             text-transform: uppercase;
         }
+        
+        /* 🔄 মারকিউ কন্টেইনার এবং ফিক্সড টেক্সট সেটিংস */
+        .notice-marquee-container {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
         .app-notice-bar marquee { 
             color: var(--notice-text-color) !important; 
             font-weight: 700; 
+            width: 100%;
         }
 
         /* 🔍 সার্চ ও ক্যাটাগরি জোন */
@@ -357,7 +362,6 @@
     </header>
 
     <div class="app-layout">
-        <!-- 📺 ভিডিও প্লেয়ার এরিয়া -->
         <div class="player-section" id="playerSection">
             <div class="playing-now-bar">
                 <span class="notice-live-dot"></span>
@@ -370,13 +374,12 @@
             </div>
         </div>
 
-        <!-- 📢 নোটিশ বার -->
         <div class="app-notice-bar">
             <span class="notice-badge" id="langNoticeBadge">নোটিশ</span>
-            <marquee id="langNoticeText" behavior="scroll" direction="left" scrollamount="4" loop="-1">আমাদের সার্ভারে স্বাগতম! বাফারিং সমস্যা এড়াতে আপনার ইন্টারনেট কানেকশন চেক করুন। ব্রাউজারে ফুল-স্ক্রিন ও বাফারিংহীন সেরা অভিজ্ঞতার জন্য অবশ্যই "ভিয়া ব্রাউজার" (Via Browser) ব্যবহার করুন। কোনো চ্যানেল না চললে প্লেলিস্ট রিফ্রেশ করুন।</marquee>
+            <div class="notice-marquee-container" id="marqueeHolder">
+                </div>
         </div>
 
-        <!-- 📑 কন্ট্রোলস এবং চ্যানেল লিস্ট -->
         <div class="right-column-wrapper">
             <div class="sticky-controls-container">
                 <div class="controls-wrapper" id="controlsWrapper">
@@ -391,7 +394,6 @@
                 </div>
             </div>
 
-            <!-- চ্যানেল লিস্ট জোন -->
             <div class="main-content">
                 <div id="loadingLayout">
                     <div class="skeleton-item" style="margin-bottom:10px;"><div class="skeleton-left"><div class="skeleton-logo"></div><div class="skeleton-text"></div></div><div class="skeleton-right"></div></div>
@@ -404,7 +406,6 @@
         </div>
     </div>
 
-    <!-- ভিডিও ইঞ্জিন স্ক্রিপ্ট -->
     <script src="https://vjs.zencdn.net/8.3.0/video.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     
@@ -467,6 +468,12 @@
             toggleMenu();
         }
 
+        /* 🔧 মারকিউ লুপ ফিক্সড করার জন্য নিরাপদ ফাংশন */
+        function updateNoticeMarquee(text) {
+            const holder = document.getElementById('marqueeHolder');
+            holder.innerHTML = `<marquee behavior="scroll" direction="left" scrollamount="4" loop="infinite">${text}</marquee>`;
+        }
+
         function applyLanguageTranslations() {
             const lang = languages[currentLang];
             document.getElementById('langAppTitle').innerText = lang.appTitle;
@@ -479,9 +486,8 @@
             document.getElementById('langNowPlaying').innerText = lang.nowPlaying;
             document.getElementById('langNoticeBadge').innerText = lang.noticeBadge;
             
-            const noticeElement = document.getElementById('langNoticeText');
-            noticeElement.innerText = lang.noticeText;
-            noticeElement.setAttribute('loop', '-1'); 
+            // মারকিউ আপডেট (স্থায়ী লুপ সহ)
+            updateNoticeMarquee(lang.noticeText);
 
             document.getElementById('searchBox').placeholder = lang.searchPlaceholder;
             
