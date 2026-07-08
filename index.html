@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>বাংলা টিভি — প্রিমিয়াম লাইভ</title>
     
-    <!-- 🌍 কোর লাইব্রেরী ও গ্লোবাল ফন্ট -->
     <link href="https://vjs.zencdn.net/8.3.0/video-js.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -89,7 +88,7 @@
             background: var(--panel-bg);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
-            padding: 14px 24px;
+            padding: 14px 20px;
             border-bottom: 1px solid var(--border-color);
             z-index: 1000;
             display: flex;
@@ -97,6 +96,7 @@
             justify-content: space-between;
             box-shadow: var(--box-shadow-premium);
             flex-shrink: 0;
+            width: 100%;
         }
 
         .header-left { display: flex; align-items: center; gap: 16px; }
@@ -147,10 +147,10 @@
         .player-section {
             background: #000 !important; 
             width: calc(100% - 24px) !important;
-            margin: 16px auto 8px auto !important;
+            margin: 12px auto 8px auto !important;
             position: relative !important;
             z-index: 95 !important;
-            border-radius: 20px !important; 
+            border-radius: 16px !important; 
             overflow: hidden !important;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 25px var(--brand-glow) !important;
             border: 1px solid rgba(239, 68, 68, 0.25) !important; 
@@ -166,8 +166,8 @@
         .app-notice-bar {
             background: var(--notice-bg);
             border: 1px solid #ff3333; 
-            margin: 0 12px 4px 12px;
-            padding: 8px 14px;
+            margin: 0 12px 6px 12px;
+            padding: 8px 12px;
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -222,6 +222,7 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
+            width: 100%;
         }
         .controls-wrapper {
             background: var(--panel-bg); 
@@ -234,11 +235,12 @@
             align-items: center; 
             gap: 6px;
             box-shadow: var(--box-shadow-premium);
+            width: 100%;
         }
 
         .category-select-wrapper { position: relative; flex: 1; }
         .category-dropdown {
-            width: 100%; padding: 7px 12px; background-color: var(--input-bg);
+            width: 100%; padding: 8px 12px; background-color: var(--input-bg);
             border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-color);
             font-size: 12px; font-weight: 500; outline: none; cursor: pointer; appearance: none;
             transition: all 0.3s ease;
@@ -253,9 +255,9 @@
             color: var(--brand-color); pointer-events: none;
         }
 
-        .search-container { flex: 1.2; position: relative; }
+        .search-container { flex: 1.1; position: relative; }
         .search-input {
-            width: 100%; padding: 7px 12px 7px 32px; background-color: var(--input-bg);
+            width: 100%; padding: 8px 12px 8px 32px; background-color: var(--input-bg);
             border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-color);
             font-size: 12px; outline: none; transition: all 0.3s ease;
         }
@@ -274,6 +276,7 @@
             flex-direction: column; 
             flex: 1; 
             overflow: hidden; 
+            width: 100%;
         }
         
         .right-column-wrapper { 
@@ -281,22 +284,26 @@
             flex-direction: column; 
             flex: 1;
             overflow: hidden;
+            width: 100%;
         }
 
         .main-content { 
             flex: 1; 
             padding: 4px 12px 20px 12px; 
             overflow-y: auto; 
+            overflow-x: hidden;
             -webkit-overflow-scrolling: touch;
+            width: 100%;
         }
         
-        /* 💎 ওটিটি স্টাইল গ্রিড লেআউট (অটো-ফিট অপটিমাইজড যাতে স্ক্রিনের বাইরে না যায়) */
+        /* 💎 ওটিটি স্টাইল গ্রিড লেআউট (স্ক্রিনের ভেতর পারফেক্টলি লকড) */
         .channel-list { 
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); 
-            gap: 12px; 
-            margin-top: 8px;
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 8px; 
+            margin-top: 4px;
             width: 100%;
+            max-width: 100%;
         }
 
         /* 👑 প্রিমিয়াম ওটিটি কার্ড ডিজাইন */
@@ -305,90 +312,91 @@
             border: 1px solid var(--border-color);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border-radius: 16px; 
-            padding: 12px; 
+            border-radius: 14px; 
+            padding: 10px; 
             display: flex;
             flex-direction: column;
             align-items: center; 
             justify-content: center;
             text-align: center;
-            gap: 10px;
+            gap: 8px;
             cursor: pointer; 
             position: relative;
             overflow: hidden;
             width: 100%;
+            max-width: 100%;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .channel-row:hover { 
             background: var(--card-hover); 
             border-color: rgba(239, 68, 68, 0.35); 
-            transform: translateY(-4px); 
-            box-shadow: 0 8px 24px rgba(239, 68, 68, 0.15);
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.15);
         }
         .channel-row.active-channel { 
             background: rgba(239, 68, 68, 0.12); 
             border-color: var(--brand-color); 
-            box-shadow: 0 0 18px var(--brand-glow);
+            box-shadow: 0 0 14px var(--brand-glow);
         }
 
         .channel-left { 
             display: flex; 
             flex-direction: column;
             align-items: center; 
-            gap: 8px; 
+            gap: 6px; 
             width: 100%; 
+            max-width: 100%;
         }
         
         .logo-wrapper {
-            width: 60px; height: 60px; flex-shrink: 0; background: rgba(255, 255, 255, 0.03);
-            border-radius: 14px; border: 1px solid var(--border-color);
-            padding: 6px; display: flex; align-items: center; justify-content: center;
+            width: 54px; height: 54px; flex-shrink: 0; background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px; border: 1px solid var(--border-color);
+            padding: 5px; display: flex; align-items: center; justify-content: center;
             transition: transform 0.2s ease;
         }
-        .channel-row:hover .logo-wrapper { transform: scale(1.06); }
-        .channel-logo { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
-        .channel-fallback-logo { font-size: 24px; color: var(--text-muted); }
+        .channel-row:hover .logo-wrapper { transform: scale(1.04); }
+        .channel-logo { width: 100%; height: 100%; object-fit: contain; border-radius: 6px; }
+        .channel-fallback-logo { font-size: 20px; color: var(--text-muted); }
         
         .channel-name { 
-            font-size: 13px; 
+            font-size: 12px; 
             font-weight: 600; 
             color: var(--text-color); 
             width: 100%;
             white-space: nowrap; 
             overflow: hidden; 
             text-overflow: ellipsis; 
-            transition: color 0.2s; 
+            padding: 0 2px;
         }
         .channel-row:hover .channel-name { color: var(--brand-color); }
         .channel-row.active-channel .channel-name { color: var(--brand-color); font-weight: 700; }
         
-        .channel-right-action { position: absolute; top: 8px; right: 8px; }
-        .play-icon { display: none !important; } 
+        .channel-right-action { position: absolute; top: 6px; right: 6px; }
         
         .channel-live-badge { 
             background: var(--brand-color); 
             color: white; 
             font-size: 8px; 
             font-weight: 800; 
-            padding: 2px 6px; 
+            padding: 1px 5px; 
             border-radius: 4px; 
             display: none; 
             letter-spacing: 0.5px; 
-            box-shadow: 0 0 8px var(--brand-glow); 
+            box-shadow: 0 0 6px var(--brand-glow); 
         }
         .active-channel .channel-live-badge { display: inline-block !important; }
 
-        .no-result { text-align: center; color: var(--text-muted); padding: 40px; font-size: 14px; grid-column: 1 / -1; }
+        .no-result { text-align: center; color: var(--text-muted); padding: 40px; font-size: 14px; grid-column: span 2; }
         
         /* 🦴 কঙ্কাল লোডার গ্রিড স্টাইল */
-        #loadingLayout { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; width: 100%; }
+        #loadingLayout { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; width: 100%; }
         .skeleton-item {
             background: var(--card-bg); border: 1px solid var(--border-color);
-            border-radius: 16px; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%;
+            border-radius: 14px; padding: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%;
         }
-        .skeleton-left { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
-        .skeleton-logo { width: 60px; height: 60px; background: var(--skeleton-bg); border-radius: 14px; animation: pulse-sk 1.5s infinite ease-in-out; }
-        .skeleton-text { width: 70%; height: 14px; background: var(--skeleton-bg); border-radius: 4px; animation: pulse-sk 1.5s infinite ease-in-out; }
+        .skeleton-left { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%; }
+        .skeleton-logo { width: 54px; height: 54px; background: var(--skeleton-bg); border-radius: 12px; animation: pulse-sk 1.5s infinite ease-in-out; }
+        .skeleton-text { width: 65%; height: 12px; background: var(--skeleton-bg); border-radius: 4px; animation: pulse-sk 1.5s infinite ease-in-out; }
         .skeleton-right { display: none; }
 
         @keyframes pulse-sk {
@@ -397,17 +405,17 @@
             100% { opacity: 0.6; }
         }
 
-        /* 💻 ল্যাপটপ এবং ডেক্সটপ প্রফেশনাল গ্রিড লেআউট (৩ কলাম গ্রিড) */
+        /* 💻 ল্যাপটপ এবং ডেক্সটপ প্রফেশনাল গ্রিড লেআউট (পারফেক্ট ৩ কলাম) */
         @media (min-width: 951px) {
             body { height: 100vh; overflow: hidden; }
             .app-layout {
                 display: grid; 
-                grid-template-columns: 1.6fr 1.1fr; 
-                gap: 24px;
-                padding: 24px; 
+                grid-template-columns: 1.55fr 1.05fr; 
+                gap: 20px;
+                padding: 20px; 
                 flex: 1; 
                 height: calc(100vh - 70px);
-                max-width: 1600px; 
+                max-width: 1550px; 
                 margin: 0 auto; 
                 width: 100%; 
                 overflow: hidden;
@@ -442,6 +450,7 @@
                 border: 1px solid var(--border-color); 
                 border-radius: 20px; 
                 box-shadow: var(--box-shadow-premium);
+                width: 100%;
             }
             
             .sticky-controls-container { 
@@ -452,6 +461,7 @@
                 display: flex !important;
                 flex-direction: column !important;
                 gap: 10px !important;
+                width: 100%;
             }
 
             .sticky-controls-container .app-notice-bar {
@@ -466,6 +476,7 @@
                 border: none; 
                 padding: 0; 
                 box-shadow: none;
+                width: 100%;
             }
             
             .main-content { 
@@ -473,13 +484,25 @@
                 margin: 0; 
                 padding: 16px; 
                 overflow-y: auto; 
+                overflow-x: hidden;
                 height: 100%; 
+                width: 100%;
             }
 
+            /* ডেক্সটপে পারফেক্ট ৩ কলাম গ্রিড লেআউট */
             .channel-list, #loadingLayout { 
-                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
+                grid-template-columns: repeat(3, 1fr); 
+                gap: 12px;
             }
-            .channel-name { font-size: 14px; }
+            .channel-row {
+                padding: 14px 10px;
+                border-radius: 16px;
+            }
+            .logo-wrapper {
+                width: 58px; height: 58px;
+            }
+            .no-result { grid-column: span 3; }
+            .channel-name { font-size: 13.5px; }
         }
 
         /* 📱 ল্যান্ডস্কেপ মোড */
@@ -532,7 +555,6 @@
     </header>
 
     <div class="app-layout">
-        <!-- 📺 লাইভ ভিডিও প্লেয়ার কলাম -->
         <div class="player-left-column">
             <div class="player-section" id="playerSection">
                 <div class="video-container" id="videoContainer">
@@ -542,17 +564,14 @@
                 </div>
             </div>
 
-            <!-- মোবাইল নোটিশ বার -->
             <div class="app-notice-bar mobile-only-notice">
                 <span class="notice-badge langNoticeBadgeClass">নোটিশ</span>
                 <div class="notice-marquee-container marqueeHolderClass"></div>
             </div>
         </div>
 
-        <!-- 📑 কন্ট্রোলস এবং চ্যানেল লিস্ট কলাম -->
         <div class="right-column-wrapper">
             <div class="sticky-controls-container">
-                <!-- ল্যাপটপ নোটিশ বার -->
                 <div class="app-notice-bar pc-only-notice" style="display: none;">
                     <span class="notice-badge langNoticeBadgeClass">নোটিশ</span>
                     <div class="notice-marquee-container marqueeHolderClass"></div>
@@ -570,10 +589,8 @@
                 </div>
             </div>
 
-            <!-- চ্যানেল লিস্ট জোন -->
             <div class="main-content">
                 <div id="loadingLayout">
-                    <div class="skeleton-item"><div class="skeleton-left"><div class="skeleton-logo"></div><div class="skeleton-text"></div></div><div class="skeleton-right"></div></div>
                     <div class="skeleton-item"><div class="skeleton-left"><div class="skeleton-logo"></div><div class="skeleton-text"></div></div><div class="skeleton-right"></div></div>
                     <div class="skeleton-item"><div class="skeleton-left"><div class="skeleton-logo"></div><div class="skeleton-text"></div></div><div class="skeleton-right"></div></div>
                     <div class="skeleton-item"><div class="skeleton-left"><div class="skeleton-logo"></div><div class="skeleton-text"></div></div><div class="skeleton-right"></div></div>
@@ -583,7 +600,6 @@
         </div>
     </div>
 
-    <!-- ভিডিও ইঞ্জিন স্ক্রিপ্ট -->
     <script src="https://vjs.zencdn.net/8.3.0/video.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     
@@ -609,7 +625,7 @@
             bn: {
                 appTitle: "বাংলা টিভি", panelTitle: "নিয়ন্ত্রণ প্যানেল", toggleText: "Language: English",
                 themeText: "থিম পরিবর্তন (Light/Dark)", refreshText: "প্লেলিস্ট রিফ্রেশ করুন",
-                telegramText: "টেলিগ্রাম চ্যানেল (লিংক)", facebookText: "ফেসবुक পেজ (সাপোর্ট)",
+                telegramText: "টেলিগ্রাম চ্যানেল (লিংক)", facebookText: "ফেসবুক পেজ (সাপোর্ট)",
                 noChannel: "কোনো চ্যানেল সিলেক্ট করা নেই",
                 noticeBadge: "নোটিশ", 
                 noticeText: "আমাদের সার্ভারে স্বাগতম! বাফারিং সমস্যা এড়াতে আপনার <b>Internet কানেকশন</b> চেক করুন। ব্রাউজারে ফুল-স্ক্রিন ও বাফারিংহীন সেরা অভিজ্ঞতার জন্য অবশ্যই <b>\"ভিয়া ব্রাউজার\" (Via Browser)</b> ব্যবহার করুন। কোনো চ্যানেল না চললে প্লেলিস্ট রিফ্রেশ করুন।",
@@ -894,17 +910,4 @@
                 const now = new Date().getTime();
                 if (now - lastTapTime < 300) {
                     e.preventDefault(); 
-                    const targetPlayer = document.getElementById('live-player');
-                    if(targetPlayer) targetPlayer.classList.toggle('forced-zoom');
-                }
-                lastTapTime = now;
-            });
-        }
-
-        window.onload = function() {
-            applyLanguageTranslations();
-            fetchPlaylist();
-        };
-    </script>
-</body>
-</html>
+                    const targetPlayer = document.getElementById('live-player
