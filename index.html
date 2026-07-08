@@ -106,6 +106,7 @@
         .drawer-item:hover { transform: translateX(6px); background: rgba(255, 255, 255, 0.05); }
         .drawer-item .icon-box { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; color: white; }
         .theme-item .icon-box { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3); }
+        .lang-item .icon-box { background: linear-gradient(135deg, #3b82f6, #1d4ed8); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
         .refresh-item .icon-box { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
         .telegram-item .icon-box { background: linear-gradient(135deg, #0088cc, #006699); box-shadow: 0 4px 12px rgba(0, 136, 204, 0.3); }
         .facebook-item .icon-box { background: linear-gradient(135deg, #1877f2, #0d5bf2); box-shadow: 0 4px 12px rgba(24, 119, 242, 0.3); }
@@ -146,27 +147,30 @@
         .video-js, .native-player-style { width: 100% !important; height: 100% !important; }
         .video-js.forced-zoom video, .forced-zoom { object-fit: cover !important; }
 
-        /* 📢 স্ক্রলিং নোটিশ বার */
+        /* 📢 প্রিমিয়াম চিকন (Slim) নোটিশ বার */
         .app-notice-bar {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.2);
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid var(--border-color);
             margin: 0 12px 4px 12px;
-            padding: 6px 12px;
-            border-radius: 8px;
+            padding: 4px 10px;
+            border-radius: 6px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 12px;
-            color: var(--text-color);
+            gap: 8px;
+            font-size: 11px;
+            color: var(--text-muted);
             flex-shrink: 0;
         }
         .notice-badge {
             background: var(--brand-color);
             color: white;
-            padding: 2px 8px;
+            padding: 1px 6px;
             border-radius: 4px;
             font-weight: 700;
+            font-size: 10px;
+            text-transform: uppercase;
         }
+        .app-notice-bar marquee { color: var(--text-color); font-weight: 500; }
 
         /* 🔍 সার্চ ও ক্যাটাগরি জোন */
         .sticky-controls-container { 
@@ -235,7 +239,7 @@
         .channel-row:hover { background: var(--card-hover); border-color: rgba(239, 68, 68, 0.2); transform: translateX(4px); }
         .channel-row.active-channel { background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.4); }
 
-        .channel-left { display: flex; align-items: center; gap: 16px; overflow: hidden; width: 75%; }
+        .channel-left { display: flex; align-items: center; gap: 16px; overflow: hidden; width: 80%; }
         .logo-wrapper {
             width: 48px; height: 48px; flex-shrink: 0; background: rgba(255, 255, 255, 0.02);
             border-radius: 10px; border: 1px solid var(--border-color);
@@ -245,10 +249,7 @@
         .channel-fallback-logo { font-size: 18px; color: var(--text-muted); }
         .channel-name { font-size: 15px; font-weight: 600; color: var(--brand-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        .channel-right-action { display: flex; align-items: center; gap: 12px; justify-content: flex-end; }
-        .fav-btn { color: var(--text-muted); font-size: 16px; cursor: pointer; transition: color 0.2s; padding: 4px; }
-        .fav-btn.is-fav { color: #f59e0b !important; }
-        
+        .channel-right-action { display: flex; align-items: center; justify-content: flex-end; }
         .play-icon { color: var(--text-muted); font-size: 14px; opacity: 0; transform: translateX(-5px); transition: all 0.2s; }
         .channel-row:hover .play-icon { opacity: 1; transform: translateX(0); color: var(--brand-color); }
         .channel-row.active-channel .play-icon { display: none !important; }
@@ -257,7 +258,7 @@
 
         .no-result { text-align: center; color: var(--text-muted); padding: 40px; font-size: 14px; }
         
-        /* 🦴 ইউটিউব স্টাইল কঙ্কাল লোডার (Skeleton Loader) */
+        /* 🦴 কঙ্কাল লোডার (Skeleton Loader) */
         .skeleton-item {
             background: var(--card-bg); border: 1px solid var(--border-color);
             border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;
@@ -302,25 +303,30 @@
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleMenu()"></div>
     <div class="sidebar-drawer" id="sidebarDrawer">
         <div class="drawer-header">
-            <h2>নিয়ন্ত্রণ প্যানেল</h2>
+            <h2 id="langPanelTitle">নিয়ন্ত্রণ প্যানেল</h2>
             <button class="close-drawer-btn" onclick="toggleMenu()"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="drawer-menu-items">
+            <!-- 🌐 মাল্টি ল্যাঙ্গুয়েজ টগল বাটন -->
+            <div class="drawer-item lang-item" onclick="toggleLanguage()">
+                <div class="icon-box"><i class="fa-solid fa-language"></i></div>
+                <span id="langToggleText">Language: English</span>
+            </div>
             <div class="drawer-item theme-item" onclick="toggleTheme()">
                 <div class="icon-box"><i class="fa-solid fa-circle-half-stroke"></i></div>
-                <span>থিম পরিবর্তন (Light/Dark)</span>
+                <span id="langThemeText">থিম পরিবর্তন (Light/Dark)</span>
             </div>
             <div class="drawer-item refresh-item" onclick="refreshPlaylist()">
                 <div class="icon-box"><i class="fa-solid fa-arrows-rotate"></i></div>
-                <span>প্লেলিস্ট রিফ্রেশ করুন</span>
+                <span id="langRefreshText">প্লেলিস্ট রিফ্রেশ করুন</span>
             </div>
             <a href="https://t.me/banglatvlivefree" target="_blank" class="drawer-item telegram-item">
                 <div class="icon-box"><i class="fa-brands fa-telegram"></i></div>
-                <span>টেলিগ্রাম চ্যানেল (লিংক)</span>
+                <span id="langTelegramText">টেলিগ্রাম চ্যানেল (লিংক)</span>
             </a>
             <a href="https://www.facebook.com/ahmed.bd.fb" target="_blank" class="drawer-item facebook-item">
                 <div class="icon-box"><i class="fa-brands fa-facebook-messenger"></i></div>
-                <span>ফেসবুক পেজ (সাপোর্ট)</span>
+                <span id="langFacebookText">ফেসবুক পেজ (সাপোর্ট)</span>
             </a>
         </div>
     </div>
@@ -328,7 +334,7 @@
     <header>
         <div class="header-left">
             <button class="menu-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button>
-            <h1>বাংলা টিভি</h1>
+            <h1 id="langAppTitle">বাংলা টিভি</h1>
         </div>
         <div class="channel-count-badge" id="totalChannels">CH-0</div>
     </header>
@@ -338,19 +344,19 @@
         <div class="player-section" id="playerSection">
             <div class="playing-now-bar">
                 <span class="notice-live-dot"></span>
-                <span>এখন দেখছেন: <span id="playingTitle" style="color: var(--brand-color); font-weight: 700;">কোনো চ্যানেল সিলেক্ট করা নেই</span></span>
+                <span><span id="langNowPlaying">এখন দেখছেন:</span> <span id="playingTitle" style="color: var(--brand-color); font-weight: 700;">কোনো চ্যানেল সিলেক্ট করা নেই</span></span>
             </div>
             <div class="video-container" id="videoContainer">
                 <video id="live-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" playsinline>
-                    <p class="vjs-no-js">আপনার ব্রাউজারটি এই প্লেয়ারটি সাপোর্ট করছে না।</p>
+                    <p class="vjs-no-js">Your browser does not support this player.</p>
                 </video>
             </div>
         </div>
 
-        <!-- 📢 স্ক্রলিং নোটিশ বার -->
+        <!-- 📢 চিকন স্ক্রলিং নোটিশ বার -->
         <div class="app-notice-bar">
-            <span class="notice-badge">নোটিশ</span>
-            <marquee behavior="scroll" direction="left" scrollamount="4">আমাদের সার্ভারে স্বাগতম! বাফারিং সমস্যা এড়াতে আপনার ইন্টারনেট কানেকশন চেক করুন। কোনো চ্যানেল না চললে প্লেলিস্ট রিফ্রেশ করুন।</marquee>
+            <span class="notice-badge" id="langNoticeBadge">নোটিশ</span>
+            <marquee id="langNoticeText" behavior="scroll" direction="left" scrollamount="4">আমাদের সার্ভারে স্বাগতম! বাফারিং সমস্যা এড়াতে আপনার ইন্টারনেট কানেকশন চেক করুন। কোনো চ্যানেল না চললে প্লেলিস্ট রিফ্রেশ করুন।</marquee>
         </div>
 
         <!-- 📑 কন্ট্রোলস এবং চ্যানেল লিস্ট -->
@@ -360,7 +366,6 @@
                     <div class="category-select-wrapper">
                         <select class="category-dropdown" id="categoryDropdown" onchange="filterCategory(this.value)">
                             <option value="All">All Categories</option>
-                            <option value="Favorites">⭐ Favorites</option>
                         </select>
                     </div>
                     <div class="search-container">
@@ -371,7 +376,7 @@
 
             <!-- চ্যানেল লিস্ট জোন -->
             <div class="main-content">
-                <!-- 🦴 কঙ্কাল লোডার (Skeleton Track) -->
+                <!-- 🦴 কঙ্কাল লোডার -->
                 <div id="loadingLayout">
                     <div class="skeleton-item" style="margin-bottom:10px;"><div class="skeleton-left"><div class="skeleton-logo"></div><div class="skeleton-text"></div></div><div class="skeleton-right"></div></div>
                     <div class="skeleton-item" style="margin-bottom:10px;"><div class="skeleton-left"><div class="skeleton-logo"></div><div class="skeleton-text"></div></div><div class="skeleton-right"></div></div>
@@ -400,9 +405,31 @@
 
         let currentUrlIndex = 0;
         let allChannels = [];
-        let favoriteChannels = JSON.parse(localStorage.getItem('bdTvFavs')) || [];
         let currentSelectedCategory = 'All'; 
         let lastUserCategory = 'All'; 
+        
+        // 🌐 ল্যাঙ্গুয়েজ ডিকশনারি ডাটাবেজ
+        let currentLang = localStorage.getItem('bdTvLang') || 'bn';
+        const languages = {
+            bn: {
+                appTitle: "বাংলা টিভি", panelTitle: "নিয়ন্ত্রণ প্যানেল", toggleText: "Language: English",
+                themeText: "থিম পরিবর্তন (Light/Dark)", refreshText: "প্লেলিস্ট রিফ্রেশ করুন",
+                telegramText: "টেলিগ্রাম চ্যানেল (লিংক)", facebookText: "ফেসবুক পেজ (সাপোর্ট)",
+                nowPlaying: "এখন দেখছেন:", noChannel: "কোনো চ্যানেল সিলেক্ট করা নেই",
+                noticeBadge: "নোটিশ", noticeText: "আমাদের সার্ভারে স্বাগতম! বাফারিং সমস্যা এড়াতে আপনার ইন্টারনেট কানেকশন চেক করুন। কোনো চ্যানেল না চললে প্লেলিস্ট রিফ্রেশ করুন।",
+                searchPlaceholder: "চ্যানেল সার্চ করুন...", noResult: "কোনো চ্যানেল খুঁজে পাওয়া যায়নি!",
+                allCat: "সব ক্যাটাগরি"
+            },
+            en: {
+                appTitle: "Bangla TV", panelTitle: "Control Panel", toggleText: "ভাষা: বাংলা",
+                themeText: "Change Theme (Light/Dark)", refreshText: "Refresh Playlist",
+                telegramText: "Telegram Channel (Link)", facebookText: "Facebook Page (Support)",
+                nowPlaying: "Now Playing:", noChannel: "No channel selected",
+                noticeBadge: "Notice", noticeText: "Welcome to our server! Check your internet connection to avoid buffering. Refresh the playlist if channels fail.",
+                searchPlaceholder: "Search channel...", noResult: "No channels found!",
+                allCat: "All Categories"
+            }
+        };
 
         function toggleMenu() {
             document.getElementById('sidebarDrawer').classList.toggle('open');
@@ -418,6 +445,37 @@
             toggleMenu();
         }
 
+        // 🌐 ল্যাঙ্গুয়েজ পরিবর্তন লজিক
+        function toggleLanguage() {
+            currentLang = currentLang === 'bn' ? 'en' : 'bn';
+            localStorage.setItem('bdTvLang', currentLang);
+            applyLanguageTranslations();
+            toggleMenu();
+        }
+
+        function applyLanguageTranslations() {
+            const lang = languages[currentLang];
+            document.getElementById('langAppTitle').innerText = lang.appTitle;
+            document.getElementById('langPanelTitle').innerText = lang.panelTitle;
+            document.getElementById('langToggleText').innerText = lang.toggleText;
+            document.getElementById('langThemeText').innerText = lang.themeText;
+            document.getElementById('langRefreshText').innerText = lang.refreshText;
+            document.getElementById('langTelegramText').innerText = lang.telegramText;
+            document.getElementById('langFacebookText').innerText = lang.facebookText;
+            document.getElementById('langNowPlaying').innerText = lang.nowPlaying;
+            document.getElementById('langNoticeBadge').innerText = lang.noticeBadge;
+            document.getElementById('langNoticeText').innerText = lang.noticeText;
+            document.getElementById('searchBox').placeholder = lang.searchPlaceholder;
+            
+            if(document.getElementById('playingTitle').innerText === languages.bn.noChannel || document.getElementById('playingTitle').innerText === languages.en.noChannel) {
+                document.getElementById('playingTitle').innerText = lang.noChannel;
+            }
+
+            // ড্রপডাউনের "All" লেখা অনুবাদ করা
+            const firstOption = document.querySelector('#categoryDropdown option[value="All"]');
+            if(firstOption) firstOption.innerText = lang.allCat;
+        }
+
         function refreshPlaylist() {
             toggleMenu();
             document.getElementById('loadingLayout').style.display = 'block';
@@ -428,7 +486,7 @@
 
         async function fetchPlaylist() {
             if (currentUrlIndex >= fetchUrls.length) {
-                document.getElementById('loadingLayout').innerHTML = "<div class='no-result'><i class='fa-solid fa-triangle-exclamation'></i> লোড ব্যর্থ হয়েছে।</div>";
+                document.getElementById('loadingLayout').innerHTML = `<div class='no-result'>${languages[currentLang].noResult}</div>`;
                 return;
             }
             try {
@@ -527,7 +585,7 @@
 
         function populateCategoryDropdown(categories) {
             const dropdown = document.getElementById('categoryDropdown');
-            dropdown.innerHTML = '<option value="All">All Categories</option><option value="Favorites">⭐ Favorites</option>';
+            dropdown.innerHTML = `<option value="All">${languages[currentLang].allCat}</option>`;
             categories.forEach(cat => {
                 const option = document.createElement('option');
                 option.value = cat; option.innerText = cat;
@@ -540,20 +598,14 @@
             listContainer.innerHTML = '';
 
             if(channels.length === 0) {
-                listContainer.innerHTML = '<div class="no-result">কোনো চ্যানেল খুঁজে পাওয়া যায়নি!</div>';
+                listContainer.innerHTML = `<div class="no-result">${languages[currentLang].noResult}</div>`;
                 return;
             }
 
             channels.forEach(ch => {
-                const isFav = favoriteChannels.includes(ch.name);
                 const row = document.createElement('div');
                 row.className = 'channel-row';
-                
-                // রো-তে ক্লিক করলে প্লে হবে (তবে স্টারে ক্লিক করলে প্লে হবে না)
-                row.onclick = function(e) { 
-                    if(e.target.classList.contains('fa-star') || e.target.classList.contains('fav-btn')) return;
-                    playVideo(ch.name, ch.url, this); 
-                };
+                row.onclick = function() { playVideo(ch.name, ch.url, this); };
 
                 let logoHtml = ch.logo ? `<img class="channel-logo" src="${ch.logo}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">` : '';
                 const fallbackHtml = `<div class="channel-fallback-logo" style="display: ${ch.logo ? 'none' : 'flex'}"><i class="fa-solid fa-tv"></i></div>`;
@@ -564,30 +616,12 @@
                         <div class="channel-name">${ch.name}</div>
                     </div>
                     <div class="channel-right-action">
-                        <div class="fav-btn ${isFav ? 'is-fav' : ''}" onclick="toggleFavorite('${ch.name}', this)"><i class="fa-solid fa-star"></i></div>
                         <div class="play-icon"><i class="fa-solid fa-play"></i></div>
                         <span class="channel-live-badge">LIVE</span>
                     </div>
                 `;
                 listContainer.appendChild(row);
             });
-        }
-
-        function toggleFavorite(name, element) {
-            const index = favoriteChannels.indexOf(name);
-            if (index > -1) {
-                favoriteChannels.splice(index, 1);
-                element.classList.remove('is-fav');
-            } else {
-                favoriteChannels.push(name);
-                element.classList.add('is-fav');
-            }
-            localStorage.setItem('bdTvFavs', JSON.stringify(favoriteChannels));
-            
-            // যদি ফেভারিট ট্যাবে থাকা অবস্থায় রিমুভ করা হয়, তবে লিস্ট রি-রেন্ডার হবে
-            if(currentSelectedCategory === 'Favorites') {
-                filterCategory('Favorites');
-            }
         }
 
         function filterCategory(category) {
@@ -597,9 +631,6 @@
 
             if (category === 'All') {
                 renderChannels(allChannels);
-            } else if (category === 'Favorites') {
-                const favs = allChannels.filter(ch => favoriteChannels.includes(ch.name));
-                renderChannels(favs);
             } else {
                 renderChannels(allChannels.filter(ch => ch.category === category));
             }
@@ -653,7 +684,7 @@
             if(hlsBackupEngine) { hlsBackupEngine.destroy(); hlsBackupEngine = null; }
             element.src = url;
             element.play().catch(e => {
-                document.getElementById('playingTitle').innerText = name + " (চ্যানেল লিঙ্কটি বর্তমানে অফলাইন আছে)";
+                document.getElementById('playingTitle').innerText = name + (currentLang === 'bn' ? " (অফলাইন)" : " (Offline)");
             });
             setupForcedDoubleTapZoom();
         }
@@ -672,7 +703,11 @@
             });
         }
 
-        window.onload = fetchPlaylist;
+        // ইনিশিয়াল লোড
+        window.onload = function() {
+            applyLanguageTranslations();
+            fetchPlaylist();
+        };
     </script>
 </body>
 </html>
