@@ -55,11 +55,11 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
-            overflow: hidden; /* পুরো বডির মেইন স্ক্রলিং বন্ধ */
+            overflow: hidden; /* পুরো বডির মেইন স্ক্রলিং লকড */
             transition: background-color 0.3s, color 0.3s;
         }
 
-        /* 👑 ওয়ান-লাইন প্রিমিয়াম হেডার */
+        /* 👑 প্রিমিয়াম হেডার */
         header {
             background: var(--panel-bg);
             backdrop-filter: var(--glass-blur);
@@ -109,15 +109,21 @@
         .drawer-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         .drawer-overlay.show { opacity: 1; pointer-events: auto; }
 
-        /* 📺 ভিডিও প্লেয়ার এরিয়া (মোবাইলে স্ক্রিনের ওপরে ১০০% ফিক্সড লকড) */
+        /* 📺 ভিডিও প্লেয়ার এরিয়া (মোবাইলে স্টিকি এবং চমৎকার রাউন্ড শেপ) */
         .player-section {
             background: #000 !important; 
             width: 100% !important;
             position: sticky !important;
             top: 0 !important;
-            z-index: 95 !important; /* স্ক্রল করার সময় এটি ওপরেই আটকে থাকবে */
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 10px var(--brand-glow) !important;
-            border-bottom: 2px solid rgba(239, 68, 68, 0.3) !important; 
+            z-index: 95 !important;
+            /* নিচের দুই কোণা রাউন্ড করার চমৎকার ডিজাইন */
+            border-bottom-left-radius: 20px !important;
+            border-bottom-right-radius: 20px !important;
+            overflow: hidden !important;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), 0 0 15px var(--brand-glow) !important;
+            border-bottom: 2px solid rgba(239, 68, 68, 0.4) !important; 
+            border-left: 1px solid var(--border-color) !important;
+            border-right: 1px solid var(--border-color) !important;
             display: block !important;
         }
 
@@ -142,7 +148,7 @@
 
         /* 🔍 সার্চ ও ক্যাটাগরি জোন */
         .sticky-controls-container { 
-            padding: 10px 12px; 
+            padding: 14px 12px 10px 12px; 
             position: sticky; 
             top: 0; 
             z-index: 90; 
@@ -177,12 +183,12 @@
             position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--brand-color);
         }
 
-        /* 📺 লেআউট এবং শুধু চ্যানেল লিস্ট স্ক্রলিং এরিয়া */
+        /* 📺 লেআউট স্ট্রাকচার */
         .app-layout { 
             display: flex; 
             flex-direction: column; 
             flex: 1; 
-            overflow: hidden; /* পুরো লেআউটের মেইন বডি ফিক্সড */
+            overflow: hidden; 
         }
         
         .right-column-wrapper { 
@@ -192,7 +198,7 @@
             overflow: hidden;
         }
 
-        /* শুধু এই অংশটুকু স্ক্রল হবে */
+        /* শুধুমাত্র নিচের এই অংশটুকু স্ক্রল হবে */
         .main-content { 
             flex: 1; 
             padding: 0 12px 20px 12px; 
@@ -230,15 +236,16 @@
         .no-result { text-align: center; color: var(--text-muted); padding: 40px; font-size: 14px; }
         #loading { text-align: center; font-size: 14px; color: var(--text-muted); margin-top: 40px; }
         
-        /* 💻 ল্যাপটপ লেআউট গ্রিড */
+        /* 💻 ল্যাপটপ এবং ডেক্সটপ প্রফেশনাল গ্রিড লেআউট */
         @media (min-width: 951px) {
             body { height: 100vh; overflow: hidden; }
             .app-layout {
-                display: grid; grid-template-columns: 1.6fr 1.1fr; gap: 20px;
+                display: grid; grid-template-columns: 1.6fr 1.1fr; gap: 24px;
                 padding: 20px; flex: 1; height: calc(100vh - 70px);
                 max-width: 1600px; margin: 0 auto; width: 100%; overflow: hidden;
             }
-            .player-section { width: 100% !important; margin: 0 !important; position: static !important; display: flex !important; flex-direction: column; height: fit-content; align-self: start; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6) !important; border: 1px solid rgba(239, 68, 68, 0.15) !important; }
+            /* ল্যাপটপে চার কোণাই সমান রাউন্ড থাকবে */
+            .player-section { width: 100% !important; margin: 0 !important; position: static !important; display: flex !important; flex-direction: column; height: fit-content; align-self: start; border-radius: 16px !important; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6) !important; border: 1px solid rgba(239, 68, 68, 0.15) !important; }
             .right-column-wrapper { display: flex; flex-direction: column; overflow: hidden; height: 100%; background: var(--panel-bg); backdrop-filter: var(--glass-blur); border: 1px solid var(--border-color); border-radius: 16px; }
             .sticky-controls-container { position: static; padding: 16px; border-bottom: 1px solid var(--border-color); background: transparent; }
             .controls-wrapper { display: flex !important; background: transparent; border: none; padding: 0; }
@@ -246,10 +253,10 @@
             #loading { margin-top: 30px; }
         }
 
-        /* 📱 ল্যান্ডস্কেপ ফুলস্ক্রিন ফিক্স */
+        /* 📱 ল্যান্ডস্কেপ মোড (মোবাইল কাত করলে ফুলস্ক্রিন) */
         @media (max-width: 950px) and (orientation: landscape) {
             header, .sticky-controls-container, .playing-now-bar, .main-content { display: none !important; }
-            .player-section { width: 100vw !important; height: 100vh !important; position: fixed !important; top: 0; left: 0; border: none; border-radius: 0; margin: 0; z-index: 9999999; display: block !important; }
+            .player-section { width: 100vw !important; height: 100vh !important; position: fixed !important; top: 0; left: 0; border: none; border-radius: 0 !important; margin: 0; z-index: 9999999; display: block !important; }
             .video-container, .video-js, .native-player-style { width: 100vw !important; height: 100vh !important; }
             .video-js video, .native-player-style { object-fit: fill !important; }
         }
@@ -292,7 +299,7 @@
     </header>
 
     <div class="app-layout">
-        <!-- 📺 ভিডিও প্লেয়ার এরিয়া (ওপরে স্টিকি/লক করা) -->
+        <!-- 📺 ভিডিও প্লেয়ার এরিয়া (ওপরে স্টিকি এবং চমৎকার রাউন্ড শেপ) -->
         <div class="player-section" id="playerSection">
             <div class="playing-now-bar">
                 <span class="notice-live-dot"></span>
@@ -328,7 +335,7 @@
         </div>
     </div>
 
-    <!-- ভিডিও ইঞ্জিন স্ক্রিপ্ট (ভিডিও.জেএস এবং এইচএলএস ব্যাকআপ ইঞ্জিন) -->
+    <!-- ভিডিও ইঞ্জিন স্ক্রিপ্ট -->
     <script src="https://vjs.zencdn.net/8.3.0/video.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     
