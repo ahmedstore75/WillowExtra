@@ -185,14 +185,14 @@
         }
         .drawer-overlay.show { opacity: 1; pointer-events: auto; }
 
-        /* 🎬 ভিডিও প্লেয়ার এরিয়া (মোবাইল এবং ল্যাপটপ উভয় জায়গায় সবসময় ওপেন থাকবে) */
+        /* 🎬 ভিডিও প্লেয়ার এরিয়া (মোবাইল এবং ল্যাপটপ দুই জায়গাতেই স্থায়ী লক) */
         .player-section {
             background: #000; width: calc(100% - 24px);
             margin: 12px auto 0 auto; position: relative;
             border-radius: 16px; overflow: hidden;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 15px var(--brand-glow);
             border: 1px solid rgba(239, 68, 68, 0.15); 
-            display: block !important; /* মোবাইলে সবসময় দৃশ্যমান রাখার সমাধান */
+            display: block !important; /* কোনো স্ক্রিপ্ট এটিকে হাইড করতে পারবে না */
         }
 
         .playing-now-bar {
