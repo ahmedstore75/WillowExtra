@@ -97,7 +97,6 @@
             position: relative;
         }
 
-        /* স্টাইলিশ টপ লোডিং প্রগ্রেস বার */
         .top-loading-bar {
             position: absolute;
             bottom: -2px;
@@ -181,11 +180,14 @@
         .video-container { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; }
         .video-js, #clappr-player { width: 100% !important; height: 100% !important; }
         
+        /* নো-ক্রপ (No Crop) ফিটিং প্রপার্টি নিশ্চিত করা হলো */
         .video-container video, 
         .video-js video, 
         #clappr-player video, 
         .vjs-tech { 
             object-fit: contain !important; 
+            width: 100% !important;
+            height: 100% !important;
         }
 
         .player-nav-zone {
@@ -347,7 +349,6 @@
             width: 100%;
         }
         
-        /* চ্যানেল লিস্টের ইনিশিয়াল স্মুথ ব্লার ইফেক্ট */
         .channel-list { 
             display: grid; 
             grid-template-columns: repeat(2, 1fr); 
@@ -360,7 +361,6 @@
             transition: filter 0.6s cubic-bezier(0.1, 1, 0.1, 1), opacity 0.6s ease;
         }
         
-        /* প্লেলিস্ট লোড সম্পন্ন হলে এই ক্লাস যুক্ত হবে */
         .channel-list.loaded {
             filter: blur(0px);
             opacity: 1;
@@ -394,7 +394,6 @@
             outline: 3px solid #ffdd44 !important;
         }
         
-        /* অ্যাক্টিভ চ্যানেলের জন্য প্রিমিয়াম পালস অ্যানিমেশন */
         .channel-row.active-channel { 
             background: rgba(239, 68, 68, 0.12); 
             border-color: var(--brand-color); 
@@ -555,11 +554,31 @@
             .channel-name { font-size: 13.5px; }
         }
 
+        /* ল্যান্ডস্কেপ (স্ক্রিন রোটেট) মোডে নো-ক্রপ ফুল স্ক্রিন সেটিংস */
         @media (max-width: 950px) and (orientation: landscape) {
             header, .sticky-controls-container, .main-content, .app-notice-bar { display: none !important; }
-            .player-section { width: 100vw !important; height: 100vh !important; position: fixed !important; top: 0; left: 0; border: none; border-radius: 0 !important; margin: 0 !important; z-index: 9999999; display: block !important; }
-            .video-container, .video-js, #clappr-player { width: 100vw !important; height: 100vh !important; }
-            .video-js video, #clappr-player video { object-fit: contain !important; }
+            .player-section { 
+                width: 100vw !important; 
+                height: 100vh !important; 
+                position: fixed !important; 
+                top: 0; 
+                left: 0; 
+                border: none !important; 
+                border-radius: 0 !important; 
+                margin: 0 !important; 
+                z-index: 9999999; 
+                display: block !important; 
+            }
+            .video-container, .video-js, #clappr-player { 
+                width: 100vw !important; 
+                height: 100vh !important; 
+            }
+            /* নিশ্চিত করা হচ্ছে ভিডিওর আসল রেশিও বজায় থাকবে এবং কোনো অংশ কাটবে না */
+            .video-js video, #clappr-player video, .vjs-tech { 
+                object-fit: contain !important; 
+                width: 100vw !important; 
+                height: 100vh !important; 
+            }
         }
     </style>
 </head>
@@ -652,7 +671,6 @@
         </div>
     </div>
 
-    <!-- স্ক্রিপ্ট থেকে hls.js বাদ দেওয়া হয়েছে -->
     <script src="https://vjs.zencdn.net/8.3.0/video.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/clappr-rtmp-plugin@latest/dist/clappr-rtmp-plugin.min.js"></script>
@@ -842,7 +860,6 @@
             isFirstInit = false; 
             resetContainers();
 
-            // প্লেয়ার ১: Video.js চালু করা হচ্ছে
             const container = document.getElementById('player-mount-point');
             container.innerHTML = `<video id="live-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" playsinline></video>`;
             
@@ -851,7 +868,6 @@
                 aspectRatio: '16:9'
             });
 
-            // Video.js ফেইল করলে সরাসরি প্লেয়ার ২ (Clappr) এ চলে যাবে
             player.on('error', function() {
                 switchToClappr(ch.url);
             });
@@ -864,7 +880,6 @@
             }
         }
 
-        // প্লেয়ার ২: ব্যাকআপ Clappr Player
         function switchToClappr(streamUrl) {
             if (player) { 
                 try { player.dispose(); } catch(e){} 
