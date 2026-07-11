@@ -179,12 +179,11 @@
         }
 
         .video-container { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; }
-        .video-js, .native-player-style, #clappr-player { width: 100% !important; height: 100% !important; }
+        .video-js, #clappr-player { width: 100% !important; height: 100% !important; }
         
         .video-container video, 
         .video-js video, 
         #clappr-player video, 
-        .native-player-style,
         .vjs-tech { 
             object-fit: contain !important; 
         }
@@ -559,8 +558,8 @@
         @media (max-width: 950px) and (orientation: landscape) {
             header, .sticky-controls-container, .main-content, .app-notice-bar { display: none !important; }
             .player-section { width: 100vw !important; height: 100vh !important; position: fixed !important; top: 0; left: 0; border: none; border-radius: 0 !important; margin: 0 !important; z-index: 9999999; display: block !important; }
-            .video-container, .video-js, .native-player-style, #clappr-player { width: 100vw !important; height: 100vh !important; }
-            .video-js video, .native-player-style, #clappr-player video { object-fit: contain !important; }
+            .video-container, .video-js, #clappr-player { width: 100vw !important; height: 100vh !important; }
+            .video-js video, #clappr-player video { object-fit: contain !important; }
         }
     </style>
 </head>
@@ -653,15 +652,14 @@
         </div>
     </div>
 
+    <!-- স্ক্রিপ্ট থেকে hls.js বাদ দেওয়া হয়েছে -->
     <script src="https://vjs.zencdn.net/8.3.0/video.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/clappr-rtmp-plugin@latest/dist/clappr-rtmp-plugin.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     
     <script>
         let player = null; 
         let clapprPlayerInstance = null;
-        let hlsBackupEngine = null;
         let isFirstInit = true; 
         const githubUrl = 'https://raw.githubusercontent.com/ahmedstore75/Iptvbdlive/main/mixiptvchannel.m3u';
         
@@ -755,7 +753,6 @@
 
         function refreshPlaylist() {
             toggleMenu();
-            // রিফ্রেশ করার সময় লোডিং বার এবং ব্লার আবার সচল হবে
             document.getElementById('topLoadingBar').classList.remove('hide');
             document.getElementById('channelList').classList.remove('loaded');
             document.getElementById('channelList').innerHTML = '';
@@ -821,7 +818,6 @@
             displayedChannels = [...allChannels]; 
             renderChannels(displayedChannels); 
 
-            // লোড হওয়ার পর টপ লোডিং বার লুকিয়ে ফেলা এবং লিস্টের ব্লার দূর করা
             document.getElementById('topLoadingBar').classList.add('hide');
             document.getElementById('channelList').classList.add('loaded');
             
@@ -846,6 +842,7 @@
             isFirstInit = false; 
             resetContainers();
 
+            // প্লেয়ার ১: Video.js চালু করা হচ্ছে
             const container = document.getElementById('player-mount-point');
             container.innerHTML = `<video id="live-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" playsinline></video>`;
             
@@ -854,51 +851,25 @@
                 aspectRatio: '16:9'
             });
 
+            // Video.js ফেইল করলে সরাসরি প্লেয়ার ২ (Clappr) এ চলে যাবে
             player.on('error', function() {
-                switchToHlsBackup(ch.url);
+                switchToClappr(ch.url);
             });
 
             try {
                 player.src({ src: ch.url, type: 'application/x-mpegURL' });
                 player.play();
             } catch(e) {
-                switchToHlsBackup(ch.url);
+                switchToClappr(ch.url);
             }
         }
 
-        function switchToHlsBackup(streamUrl) {
-            if (player) { try { player.dispose(); } catch(e){} player = null; }
-            
-            const container = document.getElementById('player-mount-point');
-            container.innerHTML = `<video id="live-player" class="native-player-style" controls autoplay playsinline style="width:100%; height:100%; background:#000;"></video>`;
-            const videoElement = document.getElementById('live-player');
-
-            videoElement.onerror = function() {
-                switchToClappr(streamUrl);
-            };
-
-            if (Hls.isSupported()) {
-                hlsBackupEngine = new Hls({ maxLoadingDelay: 4 });
-                hlsBackupEngine.loadSource(streamUrl);
-                hlsBackupEngine.attachMedia(videoElement);
-                
-                hlsBackupEngine.on(Hls.Events.ERROR, function (event, data) {
-                    if (data.fatal) {
-                        switchToClappr(streamUrl);
-                    }
-                });
-            } else if (videoElement.canPlayType('application/x-mpegURL') || videoElement.canPlayType('application/vnd.apple.mpegurl')) {
-                videoElement.src = streamUrl;
-                videoElement.play().catch(e => {
-                    switchToClappr(streamUrl);
-                });
-            } else {
-                switchToClappr(streamUrl);
-            }
-        }
-
+        // প্লেয়ার ২: ব্যাকআপ Clappr Player
         function switchToClappr(streamUrl) {
-            if (hlsBackupEngine) { try { hlsBackupEngine.destroy(); } catch(e){} hlsBackupEngine = null; }
+            if (player) { 
+                try { player.dispose(); } catch(e){} 
+                player = null; 
+            }
             
             const container = document.getElementById('player-mount-point');
             container.innerHTML = `<div id="clappr-player" style="width:100%; height:100%;"></div>`;
@@ -916,12 +887,12 @@
                     language: currentLang,
                     events: {
                         onError: function(e) {
-                            console.log("All players failed.");
+                            console.log("Both players failed.");
                         }
                     }
                 });
             } catch(e) {
-                console.log("Clappr error.");
+                console.log("Clappr Init Error.");
             }
         }
 
@@ -1034,10 +1005,6 @@
             if (clapprPlayerInstance) {
                 try { clapprPlayerInstance.destroy(); } catch(e){}
                 clapprPlayerInstance = null;
-            }
-            if (hlsBackupEngine) {
-                hlsBackupEngine.destroy();
-                hlsBackupEngine = null;
             }
             const container = document.getElementById('player-mount-point');
             container.innerHTML = '';
