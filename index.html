@@ -180,7 +180,7 @@
         .video-container { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; }
         .video-js, #clappr-player { width: 100% !important; height: 100% !important; }
         
-        /* নো-ক্রপ (No Crop) ফিটিং প্রপার্টি নিশ্চিত করা হলো */
+        /* আসল স্কিন ফিট ইমেজের মতcontain প্রপার্টি */
         .video-container video, 
         .video-js video, 
         #clappr-player video, 
@@ -554,7 +554,7 @@
             .channel-name { font-size: 13.5px; }
         }
 
-        /* ল্যান্ডস্কেপ (স্ক্রিন রোটেট) মোডে নো-ক্রপ ফুল স্ক্রিন সেটিংস */
+        /* ল্যান্ডস্কেপ মোড সেটিংস */
         @media (max-width: 950px) and (orientation: landscape) {
             header, .sticky-controls-container, .main-content, .app-notice-bar { display: none !important; }
             .player-section { 
@@ -573,7 +573,6 @@
                 width: 100vw !important; 
                 height: 100vh !important; 
             }
-            /* নিশ্চিত করা হচ্ছে ভিডিওর আসল রেশিও বজায় থাকবে এবং কোনো অংশ কাটবে না */
             .video-js video, #clappr-player video, .vjs-tech { 
                 object-fit: contain !important; 
                 width: 100vw !important; 
@@ -875,6 +874,9 @@
             try {
                 player.src({ src: ch.url, type: 'application/x-mpegURL' });
                 player.play();
+                
+                // রোটেট করার সময় ডাইমেনশন আপডেট করার জন্য ট্রিগার
+                setTimeout(handleScreenResize, 300);
             } catch(e) {
                 switchToClappr(ch.url);
             }
@@ -906,10 +908,36 @@
                         }
                     }
                 });
+                
+                // ক্ল্যাপ্র প্লেয়ারের জন্য রিসাইজ ট্রিগার
+                setTimeout(handleScreenResize, 300);
             } catch(e) {
                 console.log("Clappr Init Error.");
             }
         }
+
+        // স্ক্রিন রোটেট করলে প্লেয়ার সাইজ রেশিও রিয়েলটাইম ফিক্স করার জন্য আপনার মূল কোডের লজিক
+        function handleScreenResize() {
+            if (window.innerWidth > window.innerHeight) {
+                // ল্যান্ডস্কেপ (রোটেট) মোড
+                if (player) {
+                    player.fluid(false);
+                    player.width(window.innerWidth);
+                    player.height(window.innerHeight);
+                }
+            } else {
+                // পোর্ট্রেট মোড
+                if (player) {
+                    player.fluid(true);
+                }
+            }
+        }
+
+        // রিয়েলটাইম ওরিয়েন্টেশন বা উইন্ডো চেঞ্জ ডিটেকশন লিসেনার
+        window.addEventListener('resize', handleScreenResize);
+        window.addEventListener('orientationchange', () => {
+            setTimeout(handleScreenResize, 200);
+        });
 
         function populateCategoryDropdown(categories) {
             const dropdown = document.getElementById('categoryDropdown');
