@@ -180,7 +180,7 @@
         .video-container { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; }
         .video-js, #clappr-player { width: 100% !important; height: 100% !important; }
         
-        /* স্ট্রেইট ফিক্স: ভিডিওর আসল অ্যাসপেক্ট রেশিও ঠিক রেখে কোনো ক্রপ ছাড়া ফিট করার সিএসএস */
+        /* আপনার কোডের মূল সিএসএস লজিক যা ভিডিওকে রিয়েলটাইমে স্ট্রেচ না করে কন্টেইন করে */
         .video-container video, 
         .video-js video, 
         #clappr-player video, 
@@ -188,6 +188,25 @@
             object-fit: contain !important; 
             width: 100% !important;
             height: 100% !important;
+        }
+
+        /* আপনার দেওয়া মূল কোডের আসল ফুল-স্কিন ডাইমেনশন ক্লাস লজিক */
+        .player-section.fullscreen-mode {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            margin: 0 !important;
+            border: none !important;
+            border-radius: 0 !important;
+            z-index: 9999999 !important;
+        }
+        .player-section.fullscreen-mode .video-container,
+        .player-section.fullscreen-mode .video-js,
+        .player-section.fullscreen-mode #clappr-player {
+            width: 100vw !important;
+            height: 100vh !important;
         }
 
         .player-nav-zone {
@@ -554,7 +573,7 @@
             .channel-name { font-size: 13.5px; }
         }
 
-        /* ল্যান্ডস্কেপ মিডিয়া কুয়েরি নিশ্চিত করা হলো */
+        /* ল্যান্ডস্কেপ মিডিয়া কোয়েরি আপনার কোডের একদম মূল স্ট্রাকচার অনুযায়ী */
         @media (max-width: 950px) and (orientation: landscape) {
             header, .sticky-controls-container, .main-content, .app-notice-bar { display: none !important; }
             .player-section { 
@@ -875,7 +894,6 @@
                 player.src({ src: ch.url, type: 'application/x-mpegURL' });
                 player.play();
                 
-                // স্ক্রিন ওরিয়েন্টেশন সাইজ ট্রিগার
                 setTimeout(handleScreenResize, 300);
             } catch(e) {
                 switchToClappr(ch.url);
@@ -915,33 +933,60 @@
             }
         }
 
-        // মূল কোডের লজিক যেখানে ভিডিওর অবজেক্ট ফিট প্রোপার্টিকে ফোর্স করা হচ্ছে
+        // আপনার কোডের হুবহু সেই মূল ল্যান্ডস্কেপ রোটেট ফুল-স্কিন এপিআই লজিক
         function handleScreenResize() {
             const isLandscape = window.innerWidth > window.innerHeight;
+            const playerSec = document.getElementById('playerSection');
             
             if (isLandscape && window.innerWidth <= 950) {
-                // ল্যান্ডস্কেপ মোডে ভিডিও ডাইমেনশন ফোর্স করা হচ্ছে কোনো ক্রপ ছাড়া
+                // আপনার মূল কোড অনুযায়ী ডাইমেনশন ক্লাস এড এবং ব্রাউজার ফুল-স্কিন ট্রিগার
+                if (playerSec) {
+                    playerSec.classList.add('fullscreen-mode');
+                    
+                    // HTML5 ফুলস্ক্রিন রিকোয়েস্ট লজিক
+                    if (playerSec.requestFullscreen) {
+                        playerSec.requestFullscreen().catch(e => {});
+                    } else if (playerSec.webkitRequestFullscreen) {
+                        playerSec.webkitRequestFullscreen();
+                    } else if (playerSec.msRequestFullscreen) {
+                        playerSec.msRequestFullscreen();
+                    }
+                }
+
                 if (player) {
                     player.fluid(false);
                     player.dimensions(window.innerWidth, window.innerHeight);
                 }
                 
-                // ভিডিও এলিমেন্ট ডিরেক্ট রেশিও রিয়েলটাইম ফিক্স
-                const videoElements = document.querySelectorAll('video, .vjs-tech');
+                // রিয়েলটাইম অবজেক্ট কন্টেইন সিএসএস ওভাররাইড জোর করা হচ্ছে
+                const videoElements = document.querySelectorAll('video, .vjs-tech, #clappr-player video');
                 videoElements.forEach(el => {
                     el.style.setProperty('object-fit', 'contain', 'important');
                     el.style.setProperty('width', '100vw', 'important');
                     el.style.setProperty('height', '100vh', 'important');
                 });
             } else {
-                // পোর্ট্রেট মোডে রেগুলার ফ্লুইড ১৬:৯ রেশিও
+                // পোর্ট্রেট বা সাধারণ মোডে রিমুভ ফুল-স্কিন ক্লাস
+                if (playerSec) {
+                    playerSec.classList.remove('fullscreen-mode');
+                }
+                
+                // ব্রাউজার ফুলস্ক্রিন থেকে এক্সিট করার মূল লজিক
+                if (document.fullscreenElement || document.webkitFullscreenElement) {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen().catch(e => {});
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    }
+                }
+
                 if (player) {
                     player.fluid(true);
                 }
             }
         }
 
-        // উইন্ডো সাইজ এবং ওরিয়েন্টেশন চেঞ্জ লিসেনার রিয়েলটাইম ফিক্স নিশ্চিত করতে
+        // উইন্ডো ওরিয়েন্টেশন এবং ব্রাউজার রিসাইজ লিসেনার জেনুইন অ্যাকশন নিশ্চিত করতে
         window.addEventListener('resize', handleScreenResize);
         window.addEventListener('orientationchange', () => {
             setTimeout(handleScreenResize, 250);
