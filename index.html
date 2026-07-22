@@ -145,7 +145,6 @@
         .telegram-item .icon-box { background: linear-gradient(135deg, #0088cc, #006699); box-shadow: 0 4px 12px rgba(0, 136, 204, 0.3); }
         .facebook-item .icon-box { background: linear-gradient(135deg, #1877f2, #0d5bf2); box-shadow: 0 4px 12px rgba(24, 119, 242, 0.3); }
         
-        /* ড্রয়ার সাইজ রো এবং স্লিম সিলেক্ট বাটন */
         .drawer-item-row { 
             display: flex; 
             align-items: center; 
@@ -179,16 +178,19 @@
             flex-shrink: 0;
         }
 
+        /* ২ নম্বর গ্লাসমোরফিজম ও ফ্লোটিং ইফেক্ট যুক্ত করা হয়েছে */
         .player-section {
-            background: #000 !important; 
+            background: rgba(18, 18, 18, 0.75) !important; 
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
             width: calc(100% - 24px) !important;
             margin: 12px auto 8px auto !important;
             position: relative !important;
             z-index: 95 !important;
             border-radius: 16px !important; 
             overflow: hidden !important;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 25px var(--brand-glow) !important;
-            border: 1px solid rgba(239, 68, 68, 0.25) !important; 
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 25px var(--brand-glow) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important; 
             display: block !important;
             transition: all 0.3s ease;
         }
@@ -531,8 +533,8 @@
                 width: 100% !important; 
                 margin: 0 !important; 
                 border-radius: 16px !important; 
-                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5) !important; 
-                border: 1px solid rgba(239, 68, 68, 0.2) !important; 
+                box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6) !important; 
+                border: 1px solid rgba(255, 255, 255, 0.15) !important; 
             }
             
             .player-left-column .app-notice-bar { 
