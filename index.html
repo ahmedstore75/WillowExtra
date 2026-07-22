@@ -167,34 +167,23 @@
             transition: all 0.3s ease;
         }
 
-        .video-container { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; overflow: hidden; }
+        .video-container { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; }
         .video-js, .native-player-style { width: 100% !important; height: 100% !important; }
+        
+        .video-js.vjs-size-original video, .vjs-size-original { object-fit: contain !important; }
+        .video-js.vjs-size-fit video, .vjs-size-fit { object-fit: fill !important; }
+        .video-js.vjs-size-stretch video, .vjs-size-stretch, .video-js.forced-zoom video, .forced-zoom { object-fit: cover !important; }
 
-        /* =========================================================
-           FIXED ASPECT RATIO & FIT / STRETCH / ORIGINAL OVERRIDES
-           ========================================================= */
-        /* Original: Standard Aspect Ratio */
-        video, 
-        .video-js video, 
-        .video-js .vjs-tech,
-        .vjs-size-original video, 
-        .vjs-size-original .vjs-tech { 
-            object-fit: contain !important; 
+        /* Video.js কাস্টম জুম বাটন */
+        .vjs-zoom-control-btn {
+            cursor: pointer;
         }
-
-        /* Full Fit: Covers container completely without black borders */
-        .vjs-size-fit video, 
-        .vjs-size-fit .vjs-tech,
-        .vjs-size-fit { 
-            object-fit: cover !important; 
-        }
-
-        /* Stretch: Fills entire video viewport */
-        .vjs-size-stretch video, 
-        .vjs-size-stretch .vjs-tech, 
-        .video-js.forced-zoom video, 
-        .forced-zoom { 
-            object-fit: fill !important; 
+        .vjs-zoom-control-btn .vjs-icon-placeholder:before {
+            content: "\f00e";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            font-size: 1.3em;
+            line-height: 1.8;
         }
 
         .player-nav-zone {
@@ -498,38 +487,32 @@
             100% { background-position: -200% 0; }
         }
 
-        /* -------------------------------------------------------------
-           ল্যান্ডস্কেপ মোড (মোবাইল এবং বড় স্ক্রিন উভয়ের জন্য ডেস্কটপ ভিউ)
-        ------------------------------------------------------------- */
-        @media (min-width: 951px), (max-width: 950px) and (orientation: landscape) {
+        @media (min-width: 951px) {
             body { height: 100vh; overflow: hidden; }
-            header { padding: 8px 16px; }
-            
             .app-layout {
-                display: grid !important; 
-                grid-template-columns: 1.4fr 1fr !important; 
-                gap: 12px !important;
-                padding: 10px !important; 
+                display: grid; 
+                grid-template-columns: 1.55fr 1.05fr; 
+                gap: 20px;
+                padding: 20px; 
                 flex: 1; 
-                height: calc(100vh - 58px) !important;
-                max-width: 100% !important; 
+                height: calc(100vh - 70px);
+                max-width: 1550px; 
                 margin: 0 auto; 
                 width: 100%; 
                 overflow: hidden;
             }
             
             .player-left-column {
-                display: flex !important;
-                flex-direction: column !important;
+                display: block !important;
                 width: 100% !important;
-                height: 100% !important;
+                height: auto !important;
             }
 
             .player-section { 
                 width: 100% !important; 
                 margin: 0 !important; 
-                border-radius: 16px !important; 
-                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5) !important; 
+                border-radius: 20px !important; 
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5) !important; 
                 border: 1px solid rgba(239, 68, 68, 0.2) !important; 
             }
             
@@ -538,27 +521,27 @@
             }
             
             .right-column-wrapper { 
-                display: flex !important; 
-                flex-direction: column !important; 
+                display: flex; 
+                flex-direction: column; 
                 overflow: hidden; 
                 height: 100%; 
                 background: var(--panel-bg); 
                 backdrop-filter: var(--glass-blur); 
                 -webkit-backdrop-filter: var(--glass-blur);
                 border: 1px solid var(--border-color); 
-                border-radius: 16px; 
+                border-radius: 20px; 
                 box-shadow: var(--box-shadow-premium);
                 width: 100%;
             }
             
             .sticky-controls-container { 
                 position: static; 
-                padding: 8px; 
+                padding: 16px; 
                 border-bottom: 1px solid var(--border-color); 
                 background: transparent; 
                 display: flex !important;
                 flex-direction: column !important;
-                gap: 6px !important;
+                gap: 10px !important;
                 width: 100%;
             }
 
@@ -566,7 +549,6 @@
                 display: flex !important;
                 margin: 0 !important;
                 width: 100% !important;
-                padding: 4px 8px !important;
             }
             
             .controls-wrapper { 
@@ -581,7 +563,7 @@
             .main-content { 
                 max-width: 100%; 
                 margin: 0; 
-                padding: 8px; 
+                padding: 16px; 
                 overflow-y: auto; 
                 overflow-x: hidden;
                 height: 100%; 
@@ -589,31 +571,26 @@
             }
 
             .channel-list, #loadingLayout { 
-                grid-template-columns: repeat(3, 1fr) !important; 
-                gap: 6px !important;
+                grid-template-columns: repeat(3, 1fr); 
+                gap: 12px;
             }
-            
             .channel-row {
-                padding: 8px 6px !important;
-                border-radius: 12px !important;
+                padding: 14px 10px;
+                border-radius: 16px;
             }
-            
             .logo-wrapper {
-                width: 42px !important; 
-                height: 42px !important;
+                width: 58px; height: 58px;
             }
-            
             .no-result { grid-column: span 3; }
-            .channel-name { font-size: 11px !important; }
+            .channel-name { font-size: 13.5px; }
         }
 
-        /* LIGHT & DARK MODE ICON & BUTTON VISIBILITY OVERRIDES */
-        .menu-btn { opacity: 1 !important; }
-        .menu-btn i, .menu-btn svg { color: #ffffff !important; opacity: 1 !important; filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.3)) !important; }
-        .fav-star-btn { opacity: 1 !important; }
-        .fav-star-btn i { font-size: 12px !important; transition: all 0.2s ease !important; }
-        .fav-star-btn.is-fav { color: #f59e0b !important; background: rgba(245, 158, 11, 0.25) !important; }
-        .fav-star-btn:not(.is-fav) { color: var(--text-muted) !important; background: rgba(0, 0, 0, 0.2) !important; }
+        @media (max-width: 950px) and (orientation: landscape) {
+            header, .sticky-controls-container, .main-content, .app-notice-bar { display: none !important; }
+            .player-section { width: 100vw !important; height: 100vh !important; position: fixed !important; top: 0; left: 0; border: none; border-radius: 0 !important; margin: 0 !important; z-index: 9999999; display: block !important; }
+            .video-container, .video-js, .native-player-style { width: 100vw !important; height: 100vh !important; }
+            .video-js video, .native-player-style { object-fit: fill !important; }
+        }
     </style>
 </head>
 <body>
@@ -736,7 +713,7 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     
     <script>
-        let player; 
+        let player = null; 
         let hlsBackupEngine = null;
         let isFirstInit = true; 
         let currentVideoSize = 'fit'; 
@@ -814,10 +791,77 @@
             toggleMenu();
         }
 
-        /* ভিডিও সাইজ পরিবর্তন করার ফাংশন (Direct Class Toggle) */
+        /* ভিডিও সাইজ পরিবর্তন এবং অটো রোটেট করার মূল ফাংশন */
         function changeVideoSize(size) {
             currentVideoSize = size;
-            applyCurrentSizeClass();
+            const sizeDropdown = document.getElementById('videoSizeDropdown');
+            if (sizeDropdown) sizeDropdown.value = size;
+
+            const targetPlayer = document.getElementById('live-player');
+            if (targetPlayer) {
+                targetPlayer.classList.remove('vjs-size-original', 'vjs-size-fit', 'vjs-size-stretch', 'forced-zoom');
+                targetPlayer.classList.add('vjs-size-' + size);
+            }
+
+            // মোবাইল স্ক্রিন অটো রোটেট ও ফুলস্ক্রিন লজিক
+            const playerElem = document.getElementById('playerSection') || targetPlayer;
+            if (size === 'fit' || size === 'stretch') {
+                if (playerElem.requestFullscreen) {
+                    playerElem.requestFullscreen().then(() => {
+                        if (screen.orientation && screen.orientation.lock) {
+                            screen.orientation.lock('landscape').catch(() => {});
+                        }
+                    }).catch(() => {});
+                } else if (playerElem.webkitRequestFullscreen) {
+                    playerElem.webkitRequestFullscreen();
+                }
+            } else if (size === 'original') {
+                if (document.exitFullscreen && document.fullscreenElement) {
+                    document.exitFullscreen().then(() => {
+                        if (screen.orientation && screen.orientation.unlock) {
+                            screen.orientation.unlock();
+                        }
+                    }).catch(() => {});
+                }
+            }
+        }
+
+        /* জুম বাটন টগল */
+        function togglePlayerZoom() {
+            if (currentVideoSize === 'original') {
+                changeVideoSize('fit');
+            } else if (currentVideoSize === 'fit') {
+                changeVideoSize('stretch');
+            } else {
+                changeVideoSize('original');
+            }
+        }
+
+        /* Video.js কাস্টম জুম বাটন ইনজেক্ট */
+        function addZoomButtonToVideoJS() {
+            if (!player) return;
+            const controlBar = player.controlBar;
+            if (controlBar && !controlBar.getChild('ZoomButton')) {
+                const Button = videojs.getComponent('Button');
+                const ZoomButton = videojs.extend(Button, {
+                    constructor: function() {
+                        Button.apply(this, arguments);
+                        this.addClass('vjs-zoom-control-btn');
+                        this.controlText('Zoom');
+                    },
+                    handleClick: function() {
+                        togglePlayerZoom();
+                    }
+                });
+                videojs.registerComponent('ZoomButton', ZoomButton);
+                
+                const fullscreenToggleIndex = controlBar.children_.findIndex(c => c.name_ === 'FullscreenToggle');
+                if (fullscreenToggleIndex !== -1) {
+                    controlBar.addChild('ZoomButton', {}, fullscreenToggleIndex);
+                } else {
+                    controlBar.addChild('ZoomButton');
+                }
+            }
         }
 
         function applyCurrentSizeClass() {
@@ -927,24 +971,27 @@
             
             initVideoPlayerEngine();
 
-            if (displayedChannels.length > 0 && (window.innerWidth > 950 || window.matchMedia("(orientation: landscape)").matches)) {
+            if (displayedChannels.length > 0 && window.innerWidth > 950) {
                 playChannelAt(0);
             }
         }
 
         function initVideoPlayerEngine() {
             try {
-                player = videojs('live-player');
-                applyCurrentSizeClass();
-                setupForcedDoubleTapZoom();
+                if (!player) {
+                    player = videojs('live-player');
+                    applyCurrentSizeClass();
+                    addZoomButtonToVideoJS();
+                    setupForcedDoubleTapZoom();
 
-                player.on('error', function() {
-                    if (isFirstInit) {
-                        isFirstInit = false;
-                        return; 
-                    }
-                    handlePlayerFallbackLoop();
-                });
+                    player.on('error', function() {
+                        if (isFirstInit) {
+                            isFirstInit = false;
+                            return; 
+                        }
+                        handlePlayerFallbackLoop();
+                    });
+                }
             } catch(e) {}
         }
 
@@ -965,15 +1012,12 @@
         function switchToVideoJsPlayer() {
             if (hlsBackupEngine) { hlsBackupEngine.destroy(); hlsBackupEngine = null; }
             const channelObj = displayedChannels[activeChannelIndex];
-            resetContainers();
-
-            player = videojs('live-player');
+            
+            if (!player) {
+                initVideoPlayerEngine();
+            }
+            
             applyCurrentSizeClass();
-            setupForcedDoubleTapZoom();
-
-            player.on('error', function() {
-                handlePlayerFallbackLoop();
-            });
 
             try {
                 player.src({ src: channelObj.url, type: 'application/x-mpegURL' });
@@ -982,25 +1026,20 @@
         }
 
         function switchToHlsBackup() {
-            if (player) { try { player.dispose(); }catch(e){} player = null; }
-            if (hlsBackupEngine) { hlsBackupEngine.destroy(); hlsBackupEngine = null; }
-            
             const channelObj = displayedChannels[activeChannelIndex];
-            const container = document.getElementById('videoContainer');
-            
-            container.innerHTML = `
-                <div class="player-nav-zone player-nav-left" onclick="navigateChannel('prev')"><i class="fa-solid fa-chevron-left"></i></div>
-                <div class="player-nav-zone player-nav-right" onclick="navigateChannel('next')"><i class="fa-solid fa-chevron-right"></i></div>
-                <video id="live-player" class="native-player-style" controls autoplay playsinline style="width:100%; height:100%; background:#000;"></video>
-            `;
             const videoElement = document.getElementById('live-player');
+            
+            if (player) {
+                player.pause();
+            }
+            if (hlsBackupEngine) { hlsBackupEngine.destroy(); hlsBackupEngine = null; }
+
             applyCurrentSizeClass();
 
             if (Hls.isSupported()) {
                 hlsBackupEngine = new Hls({ maxLoadingDelay: 4 });
                 hlsBackupEngine.loadSource(channelObj.url);
                 hlsBackupEngine.attachMedia(videoElement);
-                setupForcedDoubleTapZoom();
 
                 videoElement.onerror = function() {
                     handlePlayerFallbackLoop();
@@ -1011,28 +1050,25 @@
                         handlePlayerFallbackLoop();
                     }
                 });
+                videoElement.play().catch(e => {});
             } else {
                 handlePlayerFallbackLoop();
             }
         }
 
         function switchToNativePlayer() {
-            if (player) { try { player.dispose(); }catch(e){} player = null; }
             if (hlsBackupEngine) { hlsBackupEngine.destroy(); hlsBackupEngine = null; }
 
             const channelObj = displayedChannels[activeChannelIndex];
-            const container = document.getElementById('videoContainer');
-            
-            container.innerHTML = `
-                <div class="player-nav-zone player-nav-left" onclick="navigateChannel('prev')"><i class="fa-solid fa-chevron-left"></i></div>
-                <div class="player-nav-zone player-nav-right" onclick="navigateChannel('next')"><i class="fa-solid fa-chevron-right"></i></div>
-                <video id="live-player" class="native-player-style" controls autoplay playsinline style="width:100%; height:100%; background:#000;"></video>
-            `;
             const videoElement = document.getElementById('live-player');
+            
+            if (player) {
+                player.pause();
+            }
+
             applyCurrentSizeClass();
             
             videoElement.src = channelObj.url;
-            setupForcedDoubleTapZoom();
 
             videoElement.onerror = function() {
                 handlePlayerFallbackLoop();
@@ -1149,15 +1185,12 @@
 
             isFirstInit = false; 
             currentPlayerEngineMode = 0;
-            resetContainers();
 
-            player = videojs('live-player');
+            if (!player) {
+                initVideoPlayerEngine();
+            }
+
             applyCurrentSizeClass();
-            setupForcedDoubleTapZoom();
-
-            player.on('error', function() {
-                handlePlayerFallbackLoop();
-            });
 
             try {
                 player.src({ src: ch.url, type: 'application/x-mpegURL' });
@@ -1213,23 +1246,6 @@
                 activeChannelIndex = -1;
                 renderChannels(displayedChannels);
             }, 300);
-        }
-
-        function resetContainers() {
-            if (player) {
-                try { player.dispose(); } catch(e){}
-                player = null;
-            }
-            if (hlsBackupEngine) {
-                hlsBackupEngine.destroy();
-                hlsBackupEngine = null;
-            }
-            const container = document.getElementById('videoContainer');
-            container.innerHTML = `
-                <div class="player-nav-zone player-nav-left" onclick="navigateChannel('prev')"><i class="fa-solid fa-chevron-left"></i></div>
-                <div class="player-nav-zone player-nav-right" onclick="navigateChannel('next')"><i class="fa-solid fa-chevron-right"></i></div>
-                <video id="live-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" playsinline></video>
-            `;
         }
 
         function setupForcedDoubleTapZoom() {
