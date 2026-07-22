@@ -174,18 +174,6 @@
         .video-js.vjs-size-fit video, .vjs-size-fit { object-fit: fill !important; }
         .video-js.vjs-size-stretch video, .vjs-size-stretch, .video-js.forced-zoom video, .forced-zoom { object-fit: cover !important; }
 
-        /* Video.js কাস্টম জুম বাটন আইকন */
-        .vjs-zoom-control-btn {
-            cursor: pointer;
-        }
-        .vjs-zoom-control-btn .vjs-icon-placeholder:before {
-            content: "\f00e";
-            font-family: "Font Awesome 6 Free";
-            font-weight: 900;
-            font-size: 1.3em;
-            line-height: 1.8;
-        }
-
         .player-nav-zone {
             position: absolute;
             top: 0;
@@ -713,7 +701,7 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     
     <script>
-        let player = null; 
+        let player; 
         let hlsBackupEngine = null;
         let isFirstInit = true; 
         let currentVideoSize = 'fit'; 
@@ -791,71 +779,34 @@
             toggleMenu();
         }
 
-        /* অটো-রোটেট এবং ফুলস্ক্রিন অ্যাকশন */
-        function triggerAutoRotateFullscreen() {
-            const playerContainer = document.getElementById('playerSection') || document.getElementById('live-player');
-            
-            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                if (playerContainer.requestFullscreen) {
-                    playerContainer.requestFullscreen().then(() => {
-                        if (screen.orientation && screen.orientation.lock) {
-                            screen.orientation.lock('landscape').catch(() => {});
-                        }
-                    }).catch(() => {});
-                } else if (playerContainer.webkitRequestFullscreen) {
-                    playerContainer.webkitRequestFullscreen();
-                } else if (player && player.requestFullscreen) {
-                    player.requestFullscreen();
-                }
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen().then(() => {
-                        if (screen.orientation && screen.orientation.unlock) {
-                            screen.orientation.unlock();
-                        }
-                    }).catch(() => {});
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                }
-            }
-        }
-
+        /* ভিডিও সাইজ পরিবর্তন এবং অটো রোটেট করার ফাংশন */
         function changeVideoSize(size) {
             currentVideoSize = size;
-            const sizeDropdown = document.getElementById('videoSizeDropdown');
-            if (sizeDropdown) sizeDropdown.value = size;
-
             const targetPlayer = document.getElementById('live-player');
             if (targetPlayer) {
                 targetPlayer.classList.remove('vjs-size-original', 'vjs-size-fit', 'vjs-size-stretch', 'forced-zoom');
                 targetPlayer.classList.add('vjs-size-' + size);
             }
-        }
 
-        /* Video.js-এর নিজস্ব Zoom বাটনে ক্লিক করলে অটো রোটেট ও ফুলস্ক্রিন টগল হবে */
-        function addZoomButtonToVideoJS() {
-            if (!player) return;
-            const controlBar = player.controlBar;
-            if (controlBar && !controlBar.getChild('ZoomButton')) {
-                const Button = videojs.getComponent('Button');
-                const ZoomButton = videojs.extend(Button, {
-                    constructor: function() {
-                        Button.apply(this, arguments);
-                        this.addClass('vjs-zoom-control-btn');
-                        this.controlText('Zoom');
-                    },
-                    handleClick: function() {
-                        // জুম বাটনে ক্লিক করলেই অটো-রোটেট সহ ফুলস্ক্রিন অন/অফ হবে
-                        triggerAutoRotateFullscreen();
-                    }
-                });
-                videojs.registerComponent('ZoomButton', ZoomButton);
-                
-                const fullscreenToggleIndex = controlBar.children_.findIndex(c => c.name_ === 'FullscreenToggle');
-                if (fullscreenToggleIndex !== -1) {
-                    controlBar.addChild('ZoomButton', {}, fullscreenToggleIndex);
-                } else {
-                    controlBar.addChild('ZoomButton');
+            // মোবাইল স্ক্রিন অটো রোটেট লজিক
+            const playerElem = document.getElementById('playerSection') || targetPlayer;
+            if (size === 'fit' || size === 'stretch') {
+                if (playerElem.requestFullscreen) {
+                    playerElem.requestFullscreen().then(() => {
+                        if (screen.orientation && screen.orientation.lock) {
+                            screen.orientation.lock('landscape').catch(() => {});
+                        }
+                    }).catch(() => {});
+                } else if (playerElem.webkitRequestFullscreen) {
+                    playerElem.webkitRequestFullscreen();
+                }
+            } else if (size === 'original') {
+                if (document.exitFullscreen && document.fullscreenElement) {
+                    document.exitFullscreen().then(() => {
+                        if (screen.orientation && screen.orientation.unlock) {
+                            screen.orientation.unlock();
+                        }
+                    }).catch(() => {});
                 }
             }
         }
@@ -974,20 +925,17 @@
 
         function initVideoPlayerEngine() {
             try {
-                if (!player) {
-                    player = videojs('live-player');
-                    applyCurrentSizeClass();
-                    addZoomButtonToVideoJS();
-                    setupForcedDoubleTapZoom();
+                player = videojs('live-player');
+                applyCurrentSizeClass();
+                setupForcedDoubleTapZoom();
 
-                    player.on('error', function() {
-                        if (isFirstInit) {
-                            isFirstInit = false;
-                            return; 
-                        }
-                        handlePlayerFallbackLoop();
-                    });
-                }
+                player.on('error', function() {
+                    if (isFirstInit) {
+                        isFirstInit = false;
+                        return; 
+                    }
+                    handlePlayerFallbackLoop();
+                });
             } catch(e) {}
         }
 
@@ -1008,12 +956,15 @@
         function switchToVideoJsPlayer() {
             if (hlsBackupEngine) { hlsBackupEngine.destroy(); hlsBackupEngine = null; }
             const channelObj = displayedChannels[activeChannelIndex];
-            
-            if (!player) {
-                initVideoPlayerEngine();
-            }
-            
+            resetContainers();
+
+            player = videojs('live-player');
             applyCurrentSizeClass();
+            setupForcedDoubleTapZoom();
+
+            player.on('error', function() {
+                handlePlayerFallbackLoop();
+            });
 
             try {
                 player.src({ src: channelObj.url, type: 'application/x-mpegURL' });
@@ -1022,20 +973,25 @@
         }
 
         function switchToHlsBackup() {
-            const channelObj = displayedChannels[activeChannelIndex];
-            const videoElement = document.getElementById('live-player');
-            
-            if (player) {
-                player.pause();
-            }
+            if (player) { try { player.dispose(); }catch(e){} player = null; }
             if (hlsBackupEngine) { hlsBackupEngine.destroy(); hlsBackupEngine = null; }
-
+            
+            const channelObj = displayedChannels[activeChannelIndex];
+            const container = document.getElementById('videoContainer');
+            
+            container.innerHTML = `
+                <div class="player-nav-zone player-nav-left" onclick="navigateChannel('prev')"><i class="fa-solid fa-chevron-left"></i></div>
+                <div class="player-nav-zone player-nav-right" onclick="navigateChannel('next')"><i class="fa-solid fa-chevron-right"></i></div>
+                <video id="live-player" class="native-player-style" controls autoplay playsinline style="width:100%; height:100%; background:#000;"></video>
+            `;
+            const videoElement = document.getElementById('live-player');
             applyCurrentSizeClass();
 
             if (Hls.isSupported()) {
                 hlsBackupEngine = new Hls({ maxLoadingDelay: 4 });
                 hlsBackupEngine.loadSource(channelObj.url);
                 hlsBackupEngine.attachMedia(videoElement);
+                setupForcedDoubleTapZoom();
 
                 videoElement.onerror = function() {
                     handlePlayerFallbackLoop();
@@ -1046,25 +1002,28 @@
                         handlePlayerFallbackLoop();
                     }
                 });
-                videoElement.play().catch(e => {});
             } else {
                 handlePlayerFallbackLoop();
             }
         }
 
         function switchToNativePlayer() {
+            if (player) { try { player.dispose(); }catch(e){} player = null; }
             if (hlsBackupEngine) { hlsBackupEngine.destroy(); hlsBackupEngine = null; }
 
             const channelObj = displayedChannels[activeChannelIndex];
-            const videoElement = document.getElementById('live-player');
+            const container = document.getElementById('videoContainer');
             
-            if (player) {
-                player.pause();
-            }
-
+            container.innerHTML = `
+                <div class="player-nav-zone player-nav-left" onclick="navigateChannel('prev')"><i class="fa-solid fa-chevron-left"></i></div>
+                <div class="player-nav-zone player-nav-right" onclick="navigateChannel('next')"><i class="fa-solid fa-chevron-right"></i></div>
+                <video id="live-player" class="native-player-style" controls autoplay playsinline style="width:100%; height:100%; background:#000;"></video>
+            `;
+            const videoElement = document.getElementById('live-player');
             applyCurrentSizeClass();
             
             videoElement.src = channelObj.url;
+            setupForcedDoubleTapZoom();
 
             videoElement.onerror = function() {
                 handlePlayerFallbackLoop();
@@ -1181,12 +1140,15 @@
 
             isFirstInit = false; 
             currentPlayerEngineMode = 0;
+            resetContainers();
 
-            if (!player) {
-                initVideoPlayerEngine();
-            }
-
+            player = videojs('live-player');
             applyCurrentSizeClass();
+            setupForcedDoubleTapZoom();
+
+            player.on('error', function() {
+                handlePlayerFallbackLoop();
+            });
 
             try {
                 player.src({ src: ch.url, type: 'application/x-mpegURL' });
@@ -1242,6 +1204,23 @@
                 activeChannelIndex = -1;
                 renderChannels(displayedChannels);
             }, 300);
+        }
+
+        function resetContainers() {
+            if (player) {
+                try { player.dispose(); } catch(e){}
+                player = null;
+            }
+            if (hlsBackupEngine) {
+                hlsBackupEngine.destroy();
+                hlsBackupEngine = null;
+            }
+            const container = document.getElementById('videoContainer');
+            container.innerHTML = `
+                <div class="player-nav-zone player-nav-left" onclick="navigateChannel('prev')"><i class="fa-solid fa-chevron-left"></i></div>
+                <div class="player-nav-zone player-nav-right" onclick="navigateChannel('next')"><i class="fa-solid fa-chevron-right"></i></div>
+                <video id="live-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" playsinline></video>
+            `;
         }
 
         function setupForcedDoubleTapZoom() {
