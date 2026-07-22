@@ -167,12 +167,35 @@
             transition: all 0.3s ease;
         }
 
-        .video-container { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; }
+        .video-container { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; overflow: hidden; }
         .video-js, .native-player-style { width: 100% !important; height: 100% !important; }
-        
-        .video-js.vjs-size-original video, .vjs-size-original { object-fit: contain !important; }
-        .video-js.vjs-size-fit video, .vjs-size-fit { object-fit: fill !important; }
-        .video-js.vjs-size-stretch video, .vjs-size-stretch, .video-js.forced-zoom video, .forced-zoom { object-fit: cover !important; }
+
+        /* =========================================================
+           FIXED ASPECT RATIO & FIT / STRETCH / ORIGINAL OVERRIDES
+           ========================================================= */
+        /* Original: Standard Aspect Ratio */
+        video, 
+        .video-js video, 
+        .video-js .vjs-tech,
+        .vjs-size-original video, 
+        .vjs-size-original .vjs-tech { 
+            object-fit: contain !important; 
+        }
+
+        /* Full Fit: Covers container completely without black borders */
+        .vjs-size-fit video, 
+        .vjs-size-fit .vjs-tech,
+        .vjs-size-fit { 
+            object-fit: cover !important; 
+        }
+
+        /* Stretch: Fills entire video viewport */
+        .vjs-size-stretch video, 
+        .vjs-size-stretch .vjs-tech, 
+        .video-js.forced-zoom video, 
+        .forced-zoom { 
+            object-fit: fill !important; 
+        }
 
         .player-nav-zone {
             position: absolute;
@@ -583,6 +606,14 @@
             .no-result { grid-column: span 3; }
             .channel-name { font-size: 11px !important; }
         }
+
+        /* LIGHT & DARK MODE ICON & BUTTON VISIBILITY OVERRIDES */
+        .menu-btn { opacity: 1 !important; }
+        .menu-btn i, .menu-btn svg { color: #ffffff !important; opacity: 1 !important; filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.3)) !important; }
+        .fav-star-btn { opacity: 1 !important; }
+        .fav-star-btn i { font-size: 12px !important; transition: all 0.2s ease !important; }
+        .fav-star-btn.is-fav { color: #f59e0b !important; background: rgba(245, 158, 11, 0.25) !important; }
+        .fav-star-btn:not(.is-fav) { color: var(--text-muted) !important; background: rgba(0, 0, 0, 0.2) !important; }
     </style>
 </head>
 <body>
@@ -783,14 +814,10 @@
             toggleMenu();
         }
 
-        /* ভিডিও সাইজ পরিবর্তন করার ফাংশন */
+        /* ভিডিও সাইজ পরিবর্তন করার ফাংশন (Direct Class Toggle) */
         function changeVideoSize(size) {
             currentVideoSize = size;
-            const targetPlayer = document.getElementById('live-player');
-            if (targetPlayer) {
-                targetPlayer.classList.remove('vjs-size-original', 'vjs-size-fit', 'vjs-size-stretch', 'forced-zoom');
-                targetPlayer.classList.add('vjs-size-' + size);
-            }
+            applyCurrentSizeClass();
         }
 
         function applyCurrentSizeClass() {
