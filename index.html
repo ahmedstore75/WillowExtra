@@ -174,7 +174,7 @@
         .video-js.vjs-size-fit video, .vjs-size-fit { object-fit: fill !important; }
         .video-js.vjs-size-stretch video, .vjs-size-stretch, .video-js.forced-zoom video, .forced-zoom { object-fit: cover !important; }
 
-        /* Video.js কাস্টম জুম বাটন */
+        /* Video.js কাস্টম জুম বাটন আইকন */
         .vjs-zoom-control-btn {
             cursor: pointer;
         }
@@ -791,7 +791,35 @@
             toggleMenu();
         }
 
-        /* ভিডিও সাইজ পরিবর্তন এবং অটো রোটেট করার মূল ফাংশন */
+        /* অটো-রোটেট এবং ফুলস্ক্রিন অ্যাকশন */
+        function triggerAutoRotateFullscreen() {
+            const playerContainer = document.getElementById('playerSection') || document.getElementById('live-player');
+            
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                if (playerContainer.requestFullscreen) {
+                    playerContainer.requestFullscreen().then(() => {
+                        if (screen.orientation && screen.orientation.lock) {
+                            screen.orientation.lock('landscape').catch(() => {});
+                        }
+                    }).catch(() => {});
+                } else if (playerContainer.webkitRequestFullscreen) {
+                    playerContainer.webkitRequestFullscreen();
+                } else if (player && player.requestFullscreen) {
+                    player.requestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen().then(() => {
+                        if (screen.orientation && screen.orientation.unlock) {
+                            screen.orientation.unlock();
+                        }
+                    }).catch(() => {});
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+            }
+        }
+
         function changeVideoSize(size) {
             currentVideoSize = size;
             const sizeDropdown = document.getElementById('videoSizeDropdown');
@@ -802,42 +830,9 @@
                 targetPlayer.classList.remove('vjs-size-original', 'vjs-size-fit', 'vjs-size-stretch', 'forced-zoom');
                 targetPlayer.classList.add('vjs-size-' + size);
             }
-
-            // মোবাইল স্ক্রিন অটো রোটেট ও ফুলস্ক্রিন লজিক
-            const playerElem = document.getElementById('playerSection') || targetPlayer;
-            if (size === 'fit' || size === 'stretch') {
-                if (playerElem.requestFullscreen) {
-                    playerElem.requestFullscreen().then(() => {
-                        if (screen.orientation && screen.orientation.lock) {
-                            screen.orientation.lock('landscape').catch(() => {});
-                        }
-                    }).catch(() => {});
-                } else if (playerElem.webkitRequestFullscreen) {
-                    playerElem.webkitRequestFullscreen();
-                }
-            } else if (size === 'original') {
-                if (document.exitFullscreen && document.fullscreenElement) {
-                    document.exitFullscreen().then(() => {
-                        if (screen.orientation && screen.orientation.unlock) {
-                            screen.orientation.unlock();
-                        }
-                    }).catch(() => {});
-                }
-            }
         }
 
-        /* জুম বাটন টগল */
-        function togglePlayerZoom() {
-            if (currentVideoSize === 'original') {
-                changeVideoSize('fit');
-            } else if (currentVideoSize === 'fit') {
-                changeVideoSize('stretch');
-            } else {
-                changeVideoSize('original');
-            }
-        }
-
-        /* Video.js কাস্টম জুম বাটন ইনজেক্ট */
+        /* Video.js-এর নিজস্ব Zoom বাটনে ক্লিক করলে অটো রোটেট ও ফুলস্ক্রিন টগল হবে */
         function addZoomButtonToVideoJS() {
             if (!player) return;
             const controlBar = player.controlBar;
@@ -850,7 +845,8 @@
                         this.controlText('Zoom');
                     },
                     handleClick: function() {
-                        togglePlayerZoom();
+                        // জুম বাটনে ক্লিক করলেই অটো-রোটেট সহ ফুলস্ক্রিন অন/অফ হবে
+                        triggerAutoRotateFullscreen();
                     }
                 });
                 videojs.registerComponent('ZoomButton', ZoomButton);
